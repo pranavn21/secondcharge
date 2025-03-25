@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-vehicle-list',
