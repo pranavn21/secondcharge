@@ -1,17 +1,22 @@
+<h2 class="text-center">Our Latest Vehicles</h2>
+
 <div class="container">
-        <h2>
-            Our Latest Vehicles
-        </h2>
-        
-        <mat-card class="vehicle-card">
-            <mat-card-header>
-                <mat-card-title>tesla saibertron</mat-card-title>
-                <mat-card-subtitle>pre-owned, like new</mat-card-subtitle>
-            </mat-card-header>
-            <img mat-card-image src="https://i.kinja-img.com/image/upload/c_fit,q_60,w_645/03e9212c192daab359552e0c5991c683.jpg" alt="Vehicle 1">
-            <mat-card-content>
-                <p>relatively new saibertron</p>
-            </mat-card-content>
+        <mat-card class="vehicle-card" appearance="outlined">
+            <div class="card-content-wrapper">
+                <div class="text-content">
+                    <mat-card-header>
+                        <mat-card-title>Tesla Saibertron</mat-card-title>
+                        <mat-card-subtitle>pre-owned, like new</mat-card-subtitle>
+                    </mat-card-header>
+                    <mat-card-content>
+                        <p>Relatively new Saibertron!</p>
+                        <a mat-raised-button color="primary" [routerLink]="['/vehicle', 1]">View Details</a>
+                    </mat-card-content>
+                </div>
+                <div class="img-container">
+                    <img mat-card-image src="https://i.kinja-img.com/image/upload/c_fit,q_60,w_645/03e9212c192daab359552e0c5991c683.jpg" alt="Vehicle 1">
+                </div>
+            </div>
         </mat-card>
     <!--<a mat-raised-button [routerLink]="['/user']">Go to user component</a>-->
 </div>
