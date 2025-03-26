@@ -1,1 +1,15 @@
+<mat-toolbar color="primary">
+    <mat-toolbar-row>
+        <span class="test-spacer"></span>
+            <div class="button-container">
+                <a [routerLink]="['/vehicles']" mat-flat-button>Vehicles</a>
+                <a [routerLink]="['/user']" mat-flat-button> Go to user profile </a>
+            </div>
+        </mat-toolbar-row>
+</mat-toolbar>
+
+<div class="container text-left">
+    <h1>SecondCharge</h1>
+</div>
+
 <router-outlet></router-outlet>
