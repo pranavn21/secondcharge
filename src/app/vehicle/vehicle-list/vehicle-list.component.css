@@ -1,3 +1,11 @@
+.vehicle-list-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16 px; /* space between cards */
+  padding: 16px;
+}
+
 .vehicle-card {
     display: flex;
     flex-direction: row;
