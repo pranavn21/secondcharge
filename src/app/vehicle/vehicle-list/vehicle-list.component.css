@@ -1,3 +1,15 @@
+.search-bar-container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 600px;
+  margin: 16px auto;
+  padding: 8px 12px;
+  background-color: #f5f5f5;
+  border-radius: 50px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
 .vehicle-list-container {
   display: flex;
   flex-wrap: wrap;
