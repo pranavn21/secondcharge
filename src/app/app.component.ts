@@ -4,6 +4,7 @@ import { VehicleListComponent } from './vehicle-list/vehicle-list.component';
 import { UserComponent } from './user/user.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
+import {MatInput} from '@angular/material/input';
 
 @Component({
   selector: 'app-root',
@@ -14,7 +15,8 @@ import { MatButtonModule } from '@angular/material/button';
     VehicleListComponent, 
     UserComponent,
     MatToolbarModule,
-    MatButtonModule
+    MatButtonModule,
+    MatInput
   ],
 
   templateUrl: './app.component.html', 
