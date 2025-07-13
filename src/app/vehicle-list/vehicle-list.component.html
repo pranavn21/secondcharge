@@ -1,27 +1,42 @@
 
+<mat-card class="vehicle-card">
+  <!-- Left Section: Vehicle Image -->
+  <div class="vehicle-left">
+    <img [src]="imageUrl" alt="Vehicle Image" class="vehicle-image" />
+  </div>
 
-<!--
-Initial vehicle list attempt
-<h2 class="text-center">Our Latest Vehicles</h2>
+  <!-- Right Section: Vehicle Details -->
+  <div class="vehicle-right">
+    <!-- Price -->
+    <div class="vehicle-price">{{ price }}</div>
 
-<div class="container">
-        <mat-card class="vehicle-card" appearance="outlined">
-            <div class="card-content-wrapper">
-                <div class="text-content">
-                    <mat-card-header>
-                        <mat-card-title>Tesla Saibertron</mat-card-title>
-                        <mat-card-subtitle>pre-owned, like new</mat-card-subtitle>
-                    </mat-card-header>
-                    <mat-card-content>
-                        <p>Relatively new Saibertron!</p>
-                        <a mat-raised-button color="primary" [routerLink]="['/vehicle', 1]">View Details</a>
-                    </mat-card-content>
-                </div>
-                <div class="img-container">
-                    <img mat-card-image src="https://i.kinja-img.com/image/upload/c_fit,q_60,w_645/03e9212c192daab359552e0c5991c683.jpg" alt="Vehicle 1">
-                </div>
-            </div>
-        </mat-card>
-    <a mat-raised-button [routerLink]="['/user']">Go to user component</a>
-</div>
--->
+    <!-- Title -->
+    <div class="vehicle-title">{{ title }}</div>
+
+    <!-- Mileage -->
+    <div class="vehicle-mileage">
+      <mat-icon>directions_car</mat-icon>
+      <span>{{ mileage }}</span>
+    </div>
+
+    <!-- Location -->
+    <div class="vehicle-location">
+      <mat-icon>location_on</mat-icon>
+      <span>{{ location }}</span>
+    </div>
+
+    <!-- Seller Name -->
+    <div class="vehicle-owner">
+      <mat-icon>person</mat-icon>
+      <span>{{ ownerName }}</span>
+    </div>
+
+    <!-- Changed from button to a label-like element -->
+    <div class="vehicle-action">
+      <div class="super-badge">
+        SUPER!
+      </div>
+    </div>
+  </div>
+</mat-card>
+
