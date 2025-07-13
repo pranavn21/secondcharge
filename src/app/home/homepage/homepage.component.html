@@ -12,16 +12,16 @@
 <mat-toolbar color="primary">
     <mat-toolbar-row style="padding-top: 32px;">
         <span class="test-spacer"></span>
+        <div class="button-container">
+                <a [routerLink]="['/vehicles']" mat-flat-button>Vehicles</a>
+                <a [routerLink]="['/user']" mat-flat-button> Sign In </a>
+        </div>
         <form class="example-form">
             <mat-form-field class="example-full-width" appearance="outline">
                 <mat-label>Search</mat-label>
                 <input matInput placeholder="Search for vehicle" aria-label="Search">
             </mat-form-field>
         </form>
-            <!--<div class="button-container">
-                <a [routerLink]="['/vehicles']" mat-flat-button>Vehicles</a>
-                <a [routerLink]="['/user']" mat-flat-button> Sign In </a>
-            </div>-->
         </mat-toolbar-row>
 </mat-toolbar>
 
