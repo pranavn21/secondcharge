@@ -1,0 +1,42 @@
+
+<mat-card class="vehicle-card">
+  <!-- Left Section: Vehicle Image -->
+  <div class="vehicle-left">
+    <img [src]="imageUrl" alt="Vehicle Image" class="vehicle-image" />
+  </div>
+
+  <!-- Right Section: Vehicle Details -->
+  <div class="vehicle-right">
+    <!-- Price -->
+    <div class="vehicle-price">{{ price }}</div>
+
+    <!-- Title -->
+    <div class="vehicle-title">{{ title }}</div>
+
+    <!-- Mileage -->
+    <div class="vehicle-mileage">
+      <mat-icon>directions_car</mat-icon>
+      <span>{{ mileage }}</span>
+    </div>
+
+    <!-- Location -->
+    <div class="vehicle-location">
+      <mat-icon>location_on</mat-icon>
+      <span>{{ location }}</span>
+    </div>
+
+    <!-- Seller Name -->
+    <div class="vehicle-owner">
+      <mat-icon>person</mat-icon>
+      <span>{{ ownerName }}</span>
+    </div>
+
+    <!-- Changed from button to a label-like element -->
+    <div class="vehicle-action">
+      <div class="super-badge">
+        SUPER!
+      </div>
+    </div>
+  </div>
+</mat-card>
+

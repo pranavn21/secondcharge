@@ -1,42 +1,50 @@
-# See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
+# Frontend (Angular)
+/frontend/node_modules
+/frontend/dist
+/frontend/.angular/cache
+/frontend/coverage
+/frontend/.vscode/*
+/frontend/.idea
+/frontend/*.iml
 
-# Compiled output
-/dist
-/tmp
-/out-tsc
-/bazel-out
+# Backend (.NET)
+/backend/.vs/
+/backend/**/bin/
+/backend/**/obj/
+/backend/**/*.user
+/backend/**/*.suo
+/backend/**/*.userosscache
+/backend/**/*.sln.docstates
+/backend/**/[Dd]ebug/
+/backend/**/[Dd]ebugPublic/
+/backend/**/[Rr]elease/
+/backend/**/[Rr]eleases/
+/backend/**/x64/
+/backend/**/x86/
+/backend/**/[Aa]pp_[Dd]ata/
+/backend/**/[Ll]ogs/
+/backend/**/*.log
+/backend/**/Migrations/
 
-# Node
-/node_modules
-npm-debug.log
-yarn-error.log
-
-# IDEs and editors
-.idea/
-.project
-.classpath
-.c9/
-*.launch
-.settings/
-*.sublime-workspace
-
-# Visual Studio Code
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-.history/*
-
-# Miscellaneous
-/.angular/cache
-.sass-cache/
-/connect.lock
-/coverage
-/libpeerconnection.log
-testem.log
-/typings
-
-# System files
+# General
 .DS_Store
 Thumbs.db
+*.swp
+*.swo
+*~
+
+# Environment files (DO NOT commit secrets)
+*.env
+*.env.local
+appsettings.Development.json
+appsettings.Production.json
+
+# IDE
+.vscode/
+.idea/
+*.sublime-workspace
+
+# Global .NET patterns
+**/bin/
+**/obj/
+**/.vs/

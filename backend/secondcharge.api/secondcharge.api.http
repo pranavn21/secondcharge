@@ -1,0 +1,6 @@
+@secondcharge.api_HostAddress = http://localhost:5089
+
+GET {{secondcharge.api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

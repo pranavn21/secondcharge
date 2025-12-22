@@ -1,0 +1,86 @@
+.vehicle-card {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    max-width: 800px;
+    margin: 16px auto;
+    padding: 16px;
+    border-radius: 8px;
+    background-color: #fff;
+  }
+
+  .vehicle-card:hover {
+    background-color: #96969633;
+  }
+  
+  /* Left section: 30% width for the vehicle image */
+  .vehicle-left {
+    width: 30%;
+    margin-right: 16px;
+  }
+  
+  .vehicle-image {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+  
+  /* Right section: 70% width for the text and button */
+  .vehicle-right {
+    display: flex;
+    flex-direction: column;
+    flex: 1; /* Fill remaining space */
+    justify-content: flex-start;
+  }
+  
+  /* Price, Title, Mileage, etc. */
+  .vehicle-price {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #2e7d32; /* Example color for price */
+  }
+  
+  .vehicle-title {
+    font-size: 1.2rem;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: #333;
+  }
+  
+  .vehicle-mileage,
+  .vehicle-location,
+  .vehicle-owner {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #666;
+  }
+  
+  .vehicle-mileage mat-icon,
+  .vehicle-location mat-icon,
+  .vehicle-owner mat-icon {
+    margin-right: 4px;
+    color: #888;
+  }
+  
+  /* Button at the bottom right */
+  .vehicle-action {
+    margin-top: auto; /* pushes the button to the bottom of the container */
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  .super-badge {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 9999px; /* large radius for an ellipse */
+    background-color: #00c853; /* or any color you prefer */
+    color: #fff;
+    font-weight: 600;
+    text-align: center;
+    white-space: nowrap;
+  }
+
