@@ -9,7 +9,7 @@ namespace secondcharge.api.Models.Domain
         public Car CarModel { get; set; }
         public int Mileage { get; set; }
         public string Color { get; set; }
-        public Location listingLocation { get; set; }
+        public Guid listingLocationId { get; set; }
         public double Price { get; set; }
 
     }

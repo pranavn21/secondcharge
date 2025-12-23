@@ -33,10 +33,9 @@ namespace secondcharge.api.Controllers
                 {
                     Id = vehicleListingDomain.Id,
                     CarId = vehicleListingDomain.CarId,
-                    CarModel = vehicleListingDomain.CarModel,
                     Mileage = vehicleListingDomain.Mileage,
                     Color = vehicleListingDomain.Color,
-                    listingLocation = vehicleListingDomain.listingLocation,
+                    listingLocationId = vehicleListingDomain.listingLocationId,
                     Price = vehicleListingDomain.Price
                 });
             }
@@ -63,10 +62,9 @@ namespace secondcharge.api.Controllers
             {
                 Id = vehicleListingDomain.Id,
                 CarId = vehicleListingDomain.CarId,
-                CarModel = vehicleListingDomain.CarModel,
                 Mileage = vehicleListingDomain.Mileage,
                 Color = vehicleListingDomain.Color,
-                listingLocation = vehicleListingDomain.listingLocation,
+                listingLocationId = vehicleListingDomain.listingLocationId,
                 Price = vehicleListingDomain.Price
             };
 
@@ -81,10 +79,10 @@ namespace secondcharge.api.Controllers
             // Map DTO to Domain Model
             var vehicleListingDomainModel = new VehicleListing
             {
-                CarModel = addVehicleListingRequestDto.CarModel,
+                CarId = addVehicleListingRequestDto.CarId,
                 Mileage = addVehicleListingRequestDto.Mileage,
                 Color = addVehicleListingRequestDto.Color,
-                listingLocation = addVehicleListingRequestDto.listingLoction,
+                listingLocationId = addVehicleListingRequestDto.listingLocationId,
                 Price = addVehicleListingRequestDto.Price
             };
 
@@ -97,10 +95,9 @@ namespace secondcharge.api.Controllers
             {
                 Id = vehicleListingDomainModel.Id,
                 CarId = vehicleListingDomainModel.CarId,
-                CarModel = vehicleListingDomainModel.CarModel,
                 Mileage = vehicleListingDomainModel.Mileage,
                 Color = vehicleListingDomainModel.Color,
-                listingLocation = vehicleListingDomainModel.listingLocation,
+                listingLocationId = vehicleListingDomainModel.listingLocationId,
                 Price = vehicleListingDomainModel.Price
             };
 
@@ -123,10 +120,10 @@ namespace secondcharge.api.Controllers
             }
 
             // Map DTO to Domain Model
-            vehicleListingDomainModel.CarModel = updateVehicleListingRequestDto.CarModel;
+            vehicleListingDomainModel.CarId = updateVehicleListingRequestDto.CarId;
             vehicleListingDomainModel.Mileage = updateVehicleListingRequestDto.Mileage;
             vehicleListingDomainModel.Color = updateVehicleListingRequestDto.Color;
-            vehicleListingDomainModel.listingLocation = updateVehicleListingRequestDto.listingLoction;
+            vehicleListingDomainModel.listingLocationId = updateVehicleListingRequestDto.listingLocationId;
             vehicleListingDomainModel.Price = updateVehicleListingRequestDto.Price;
 
             dbContext.SaveChanges(); // don't need to add/update anything to the domain model as the domain model is being tracked, so we just need to save the changes
@@ -135,10 +132,9 @@ namespace secondcharge.api.Controllers
             {
                 Id = vehicleListingDomainModel.Id,
                 CarId = vehicleListingDomainModel.CarId,
-                CarModel = vehicleListingDomainModel.CarModel,
                 Mileage = vehicleListingDomainModel.Mileage,
                 Color = vehicleListingDomainModel.Color,
-                listingLocation = vehicleListingDomainModel.listingLocation,
+                listingLocationId = vehicleListingDomainModel.listingLocationId,
                 Price = vehicleListingDomainModel.Price
             };
 
@@ -167,10 +163,9 @@ namespace secondcharge.api.Controllers
             {
                 Id = vehicleListingDomainModel.Id,
                 CarId = vehicleListingDomainModel.CarId,
-                CarModel = vehicleListingDomainModel.CarModel,
                 Mileage = vehicleListingDomainModel.Mileage,
                 Color = vehicleListingDomainModel.Color,
-                listingLocation = vehicleListingDomainModel.listingLocation,
+                listingLocationId = vehicleListingDomainModel.listingLocationId,
                 Price = vehicleListingDomainModel.Price
             };
 
