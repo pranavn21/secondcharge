@@ -44,7 +44,7 @@ namespace secondcharge.api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Cars");
+                    b.ToTable("Cars", (string)null);
                 });
 
             modelBuilder.Entity("secondcharge.api.Models.Domain.Location", b =>
@@ -61,12 +61,13 @@ namespace secondcharge.api.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("zipCode")
-                        .HasColumnType("int");
+                    b.Property<string>("zipCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Locations");
+                    b.ToTable("Locations", (string)null);
                 });
 
             modelBuilder.Entity("secondcharge.api.Models.Domain.User", b =>
@@ -83,16 +84,22 @@ namespace secondcharge.api.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserPhoneNumber")
-                        .HasColumnType("int");
+                    b.Property<string>("UserPhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserRole")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("userLocationId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.HasIndex("userLocationId");
+
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("secondcharge.api.Models.Domain.VehicleListing", b =>
@@ -114,16 +121,27 @@ namespace secondcharge.api.Migrations
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
-                    b.Property<Guid>("listingLoctionId")
+                    b.Property<Guid>("listingLocationId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CarId");
 
-                    b.HasIndex("listingLoctionId");
+                    b.HasIndex("listingLocationId");
 
-                    b.ToTable("VehicleListings");
+                    b.ToTable("VehicleListings", (string)null);
+                });
+
+            modelBuilder.Entity("secondcharge.api.Models.Domain.User", b =>
+                {
+                    b.HasOne("secondcharge.api.Models.Domain.Location", "userLocation")
+                        .WithMany()
+                        .HasForeignKey("userLocationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("userLocation");
                 });
 
             modelBuilder.Entity("secondcharge.api.Models.Domain.VehicleListing", b =>
@@ -134,15 +152,15 @@ namespace secondcharge.api.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("secondcharge.api.Models.Domain.Location", "listingLoction")
+                    b.HasOne("secondcharge.api.Models.Domain.Location", "listingLocation")
                         .WithMany()
-                        .HasForeignKey("listingLoctionId")
+                        .HasForeignKey("listingLocationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("CarModel");
 
-                    b.Navigation("listingLoction");
+                    b.Navigation("listingLocation");
                 });
 #pragma warning restore 612, 618
         }
