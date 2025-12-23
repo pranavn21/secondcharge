@@ -114,14 +114,14 @@ namespace secondcharge.api.Migrations
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
-                    b.Property<Guid>("listingLoctionId")
+                    b.Property<Guid>("listingLocationId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CarId");
 
-                    b.HasIndex("listingLoctionId");
+                    b.HasIndex("listingLocationId");
 
                     b.ToTable("VehicleListings");
                 });
@@ -134,15 +134,15 @@ namespace secondcharge.api.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("secondcharge.api.Models.Domain.Location", "listingLoction")
+                    b.HasOne("secondcharge.api.Models.Domain.Location", "listingLocation")
                         .WithMany()
-                        .HasForeignKey("listingLoctionId")
+                        .HasForeignKey("listingLocationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("CarModel");
 
-                    b.Navigation("listingLoction");
+                    b.Navigation("listingLocation");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Components.Routing;
+using secondcharge.api.Models.Domain;
 
-namespace secondcharge.api.Models.Domain
+namespace secondcharge.api.Models.DTO
 {
-    public class VehicleListing
+    public class VehicleListingDto
     {
         public Guid Id { get; set; }
         public Guid CarId { get; set; }
@@ -11,6 +11,5 @@ namespace secondcharge.api.Models.Domain
         public string Color { get; set; }
         public Location listingLocation { get; set; }
         public double Price { get; set; }
-
     }
 }

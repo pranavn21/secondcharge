@@ -85,7 +85,7 @@ namespace secondcharge.api.Controllers
                 ModelImageUrl = addCarRequestDto.ModelImageUrl
             };
 
-            // Use Domain Model to create Region
+            // Use Domain Model to create Cars
             dbContext.Cars.Add(carDomainModel); // Track changes, not save
             dbContext.SaveChanges(); // This is needed to actually save the changes to the DB
 
@@ -104,7 +104,7 @@ namespace secondcharge.api.Controllers
             return CreatedAtAction(nameof(GetCarById), new { id = carDto.Id }, carDto); // POST doesn't return 200, they should return 201
         }
 
-        // Update region
+        // Update cars
         // PUT: https://localhost:portnumber/api/cars
         [HttpPut]
         [Route("{id:Guid}")]
@@ -137,8 +137,8 @@ namespace secondcharge.api.Controllers
             return Ok(carDto);
         }
 
-        // Delete Region
-        // DELETE: https://localhost:portnumber/api/regions/{id}
+        // Delete Car
+        // DELETE: https://localhost:portnumber/api/cars/{id}
         [HttpDelete]
         [Route("{id:Guid}")]
         public IActionResult Delete([FromRoute] Guid id)
@@ -150,7 +150,7 @@ namespace secondcharge.api.Controllers
                 return NotFound();
             }
 
-            // Delete region
+            // Delete car
             dbContext.Cars.Remove(carDomainModel);
             dbContext.SaveChanges();
 
