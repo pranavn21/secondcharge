@@ -61,8 +61,9 @@ namespace secondcharge.api.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("zipCode")
-                        .HasColumnType("int");
+                    b.Property<string>("zipCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
