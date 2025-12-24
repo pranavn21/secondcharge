@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using secondcharge.api.Data;
@@ -14,11 +15,13 @@ namespace secondcharge.api.Controllers
     {
         private readonly SecondChargeDbContext dbContext;
         private readonly IUserRepository userRepository;
+        private readonly IMapper mapper;
 
-        public UsersController(SecondChargeDbContext dbContext, IUserRepository userRepository)
+        public UsersController(SecondChargeDbContext dbContext, IUserRepository userRepository, IMapper mapper)
         {
             this.dbContext = dbContext;
             this.userRepository = userRepository;
+            this.mapper = mapper;
         }
 
         // GET ALL USERS
@@ -29,23 +32,8 @@ namespace secondcharge.api.Controllers
             // Get Data from database - Domain models
             var usersDomain = await userRepository.GetAllUsersAsync();
 
-            // Map Domain Models to DTO
-            var usersDto = new List<UserDto>();
-            foreach (var userDomain in usersDomain)
-            {
-                usersDto.Add(new UserDto()
-                {
-                    Id = userDomain.Id,
-                    UserName = userDomain.UserName,
-                    Password = userDomain.Password,
-                    userLocationId = userDomain.userLocationId,
-                    UserRole = userDomain.UserRole,
-                    UserPhoneNumber = userDomain.UserPhoneNumber
-                });
-            }
-
-            // Return DTOs
-            return Ok(usersDto);
+            // Map domain to DTO & return DTOs
+            return Ok(mapper.Map<List<UserDto>>(usersDomain));
         }
 
         // GET A USER BY ID
@@ -61,18 +49,8 @@ namespace secondcharge.api.Controllers
                 return NotFound();
             }
 
-            // Map/Convert User Domain Model to User DTO
-            var userDto = new UserDto
-            {
-                Id = userDomain.Id,
-                UserName = userDomain.UserName,
-                Password = userDomain.Password,
-                userLocationId = userDomain.userLocationId,
-                UserRole = userDomain.UserRole,
-                UserPhoneNumber = userDomain.UserPhoneNumber
-            };
-
-            return Ok(userDto);
+            // Map/Convert User Domain Model to User DTO and return it
+            return Ok(mapper.Map<UserDto>(userDomain));
         }
 
         // POST To Create New User
@@ -81,28 +59,13 @@ namespace secondcharge.api.Controllers
         public async Task<IActionResult> Create([FromBody] AddUserRequestDto addUserRequestDto)
         {
             // Map DTO to Domain Model
-            var userDomainModel = new User
-            {
-                UserName = addUserRequestDto.UserName,
-                Password = addUserRequestDto.Password,
-                userLocationId = addUserRequestDto.userLocationId,
-                UserRole = addUserRequestDto.UserRole,
-                UserPhoneNumber = addUserRequestDto.UserPhoneNumber
-            };
+            var userDomainModel = mapper.Map<User>(addUserRequestDto);
 
             // Use Domain Model to create User
             userDomainModel = await userRepository.CreateAsync(userDomainModel);
 
             // Map Domain model back to DTO
-            var userDto = new UserDto
-            {
-                Id = userDomainModel.Id,
-                UserName = userDomainModel.UserName,
-                Password = userDomainModel.Password,
-                userLocationId = userDomainModel.userLocationId,
-                UserRole = userDomainModel.UserRole,
-                UserPhoneNumber = userDomainModel.UserPhoneNumber
-            };
+            var userDto = mapper.Map<UserDto>(userDomainModel);
 
             // Using CreatedAtAction, we generate a 201 response that auto-generates a Location header to tell the client where to retrieve the new resource
             // first parameter is needed to get the action method to retrieve the resource, then we need to route value for that method, then response body
@@ -116,14 +79,7 @@ namespace secondcharge.api.Controllers
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateUserRequestDto updateUserRequestDto)
         {
             // Map DTO to Domain Model
-            var userDomainModel = new User
-            {
-                UserName = updateUserRequestDto.UserName,
-                Password = updateUserRequestDto.Password,
-                userLocationId = updateUserRequestDto.userLocationId,
-                UserRole = updateUserRequestDto.UserRole,
-                UserPhoneNumber = updateUserRequestDto.UserPhoneNumber
-            };
+            var userDomainModel = mapper.Map<User>(updateUserRequestDto);
 
             userDomainModel = await userRepository.UpdateAsync(id, userDomainModel);
 
@@ -132,18 +88,8 @@ namespace secondcharge.api.Controllers
                 return NotFound();
             }
 
-            // Map Domain model back to DTO
-            var userDto = new UserDto
-            {
-                Id = userDomainModel.Id,
-                UserName = userDomainModel.UserName,
-                Password = userDomainModel.Password,
-                userLocationId = userDomainModel.userLocationId,
-                UserRole = userDomainModel.UserRole,
-                UserPhoneNumber = userDomainModel.UserPhoneNumber
-            };
-
-            return Ok(userDto);
+            // Map Domain model back to DTO and return it
+            return Ok(mapper.Map<UserDto>(userDomainModel));
         }
 
         // Delete User
@@ -159,18 +105,8 @@ namespace secondcharge.api.Controllers
                 return NotFound();
             }
 
-            // return domainmodel to Dto
-            var userDto = new UserDto
-            {
-                Id = userDomainModel.Id,
-                UserName = userDomainModel.UserName,
-                Password = userDomainModel.Password,
-                userLocationId = userDomainModel.userLocationId,
-                UserRole = userDomainModel.UserRole,
-                UserPhoneNumber = userDomainModel.UserPhoneNumber
-            };
-
-            return Ok(userDto);
+            // return domainmodel to Dto and return it
+            return Ok(mapper.Map<UserDto>(userDomainModel));
         }
     }
 }

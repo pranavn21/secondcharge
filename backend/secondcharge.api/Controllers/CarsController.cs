@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using secondcharge.api.Data;
@@ -15,11 +16,13 @@ namespace secondcharge.api.Controllers
     {
         private readonly SecondChargeDbContext dbContext;
         private readonly ICarRepository carRepository;
+        private readonly IMapper mapper;
 
-        public CarsController(SecondChargeDbContext dbContext, ICarRepository carRepository)
+        public CarsController(SecondChargeDbContext dbContext, ICarRepository carRepository, IMapper mapper)
         {
             this.dbContext = dbContext;
             this.carRepository = carRepository;
+            this.mapper = mapper;
         }
 
         // GET ALL CARS
@@ -29,23 +32,9 @@ namespace secondcharge.api.Controllers
         {
             // Get Data from database - Domain models
             var carsDomain = await carRepository.GetAllCarsAsync();
-              
-            // Map Domain Models to DTO
-            var carsDto = new List<CarDto>();
-            foreach (var carDomain in carsDomain)
-            {
-                carsDto.Add(new CarDto()
-                {
-                    Id = carDomain.Id,
-                    Make = carDomain.Make,
-                    Model = carDomain.Model,
-                    Efficiency = carDomain.Efficiency,
-                    ModelImageUrl = carDomain.ModelImageUrl
-                });
-            }
 
-            // Return DTOs
-            return Ok(carsDto);
+            // Map domain to DTO & return DTOs
+            return Ok(mapper.Map<List<CarDto>>(carsDomain));
         }
 
         // GET A CAR BY ID
@@ -62,17 +51,8 @@ namespace secondcharge.api.Controllers
                 return NotFound();
             }
 
-            // Map/Convert Car Domain Model to Car DTO
-            var carDto = new CarDto
-            {
-                Id = carDomain.Id,
-                Make = carDomain.Make,
-                Model = carDomain.Model,
-                Efficiency = carDomain.Efficiency,
-                ModelImageUrl = carDomain.ModelImageUrl
-            };
-
-            return Ok(carDto);
+            // Map/Convert Car Domain Model to Car DTO and return it
+            return Ok(mapper.Map<CarDto>(carDomain));
         }
 
         // POST To Create New Car
@@ -81,26 +61,13 @@ namespace secondcharge.api.Controllers
         public async Task<IActionResult> Create([FromBody] AddCarRequestDto addCarRequestDto)
         {
             // Map DTO to Domain Model
-            var carDomainModel = new Car
-            {
-                Make = addCarRequestDto.Make,
-                Model = addCarRequestDto.Model,
-                Efficiency = addCarRequestDto.Efficiency,
-                ModelImageUrl = addCarRequestDto.ModelImageUrl
-            };
+            var carDomainModel = mapper.Map<Car>(addCarRequestDto);
 
             // Use Domain Model to create Cars
             carDomainModel = await carRepository.CreateAsync(carDomainModel);
 
             // Map Domain model back to DTO
-            var carDto = new CarDto
-            {
-                Id = carDomainModel.Id,
-                Make = carDomainModel.Make,
-                Model = carDomainModel.Model,
-                Efficiency = carDomainModel.Efficiency,
-                ModelImageUrl = carDomainModel.ModelImageUrl
-            };
+            var carDto = mapper.Map<CarDto>(carDomainModel);
 
             // Using CreatedAtAction, we generate a 201 response that auto-generates a Location header to tell the client where to retrieve the new resource
             // first parameter is needed to get the action method to retrieve the resource, then we need to route value for that method, then response body
@@ -114,13 +81,7 @@ namespace secondcharge.api.Controllers
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateCarRequestDto updateCarRequestDto)
         {
             // Map DTO to Domain Model
-            var carDomainModel = new Car
-            {
-                Make = updateCarRequestDto.Make,
-                Model = updateCarRequestDto.Model,
-                Efficiency = updateCarRequestDto.Efficiency,
-                ModelImageUrl = updateCarRequestDto.ModelImageUrl
-            };
+            var carDomainModel = mapper.Map<Car>(updateCarRequestDto);
 
             carDomainModel = await carRepository.UpdateAsync(id, carDomainModel);
 
@@ -129,17 +90,8 @@ namespace secondcharge.api.Controllers
                 return NotFound();
             }
 
-            // Map Domain model back to DTO
-            var carDto = new CarDto
-            {
-                Id = carDomainModel.Id,
-                Make = carDomainModel.Make,
-                Model = carDomainModel.Model,
-                Efficiency = carDomainModel.Efficiency,
-                ModelImageUrl = carDomainModel.ModelImageUrl
-            };
-
-            return Ok(carDto);
+            // Map Domain model back to DTO and return it
+            return Ok(mapper.Map<CarDto>(carDomainModel));
         }
 
         // Delete Car
@@ -155,17 +107,8 @@ namespace secondcharge.api.Controllers
                 return NotFound();
             }
 
-            // return domainmodel to Dto
-            var carDto = new CarDto
-            {
-                Id = carDomainModel.Id,
-                Make = carDomainModel.Make,
-                Model = carDomainModel.Model,
-                Efficiency = carDomainModel.Efficiency,
-                ModelImageUrl = carDomainModel.ModelImageUrl
-            };
-
-            return Ok(carDto);
+            // return domainmodel to Dto and return it
+            return Ok(mapper.Map<CarDto>(carDomainModel));
         }
     }
 }
