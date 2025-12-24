@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using secondcharge.api.Data;
 using secondcharge.api.Models.Domain;
 using secondcharge.api.Models.DTO;
@@ -20,10 +21,10 @@ namespace secondcharge.api.Controllers
         // GET ALL LOCATIONS
         // GET: https://localhost:portnumber/api/locations
         [HttpGet]
-        public IActionResult GetAllLocations()
+        public async Task<IActionResult> GetAllLocations()
         {
             // Get Data from database - Domain models
-            var locationsDomain = dbContext.Locations.ToList();
+            var locationsDomain = await dbContext.Locations.ToListAsync();
 
             // Map Domain Models to DTO
             var locationsDto = new List<LocationDto>();
@@ -46,10 +47,10 @@ namespace secondcharge.api.Controllers
         // GET: https://localhost:portnumber/api/locations/{id}
         [HttpGet]
         [Route("{id:Guid}")]
-        public IActionResult GetLocationById(Guid id)
+        public async Task<IActionResult> GetLocationById(Guid id)
         {
             // Get Location Domain Model from DB
-            var locationDomain = dbContext.Locations.FirstOrDefault(x => x.Id == id);
+            var locationDomain = await dbContext.Locations.FirstOrDefaultAsync(x => x.Id == id);
             if (locationDomain == null)
             {
                 return NotFound();
@@ -70,7 +71,7 @@ namespace secondcharge.api.Controllers
         // POST To Create New Location
         // POST: https://localhost:portnumber/api/locations
         [HttpPost]
-        public IActionResult Create([FromBody] AddLocationRequestDto addLocationRequestDto)
+        public async Task<IActionResult> Create([FromBody] AddLocationRequestDto addLocationRequestDto)
         {
             // Map DTO to Domain Model
             var locationDomainModel = new Location
@@ -81,8 +82,8 @@ namespace secondcharge.api.Controllers
             };
 
             // Use Domain Model to create Location
-            dbContext.Locations.Add(locationDomainModel); // Track changes, not save
-            dbContext.SaveChanges(); // This is needed to actually save the changes to the DB
+            await dbContext.Locations.AddAsync(locationDomainModel); // Track changes, not save
+            await dbContext.SaveChangesAsync(); // This is needed to actually save the changes to the DB
 
             // Map Domain model back to DTO
             var locationDto = new LocationDto
@@ -102,9 +103,9 @@ namespace secondcharge.api.Controllers
         // PUT: https://localhost:portnumber/api/locations/{id}
         [HttpPut]
         [Route("{id:Guid}")]
-        public IActionResult Update([FromRoute] Guid id, [FromBody] UpdateLocationRequestDto updateLocationRequestDto)
+        public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateLocationRequestDto updateLocationRequestDto)
         {
-            var locationDomainModel = dbContext.Locations.FirstOrDefault(x => x.Id == id);
+            var locationDomainModel = await dbContext.Locations.FirstOrDefaultAsync(x => x.Id == id);
 
             if (locationDomainModel == null)
             {
@@ -116,7 +117,7 @@ namespace secondcharge.api.Controllers
             locationDomainModel.State = updateLocationRequestDto.State;
             locationDomainModel.zipCode = updateLocationRequestDto.zipCode;
 
-            dbContext.SaveChanges(); // don't need to add/update anything to the domain model as the domain model is being tracked, so we just need to save the changes
+            await dbContext.SaveChangesAsync(); // don't need to add/update anything to the domain model as the domain model is being tracked, so we just need to save the changes
 
             var locationDto = new LocationDto
             {
@@ -133,9 +134,9 @@ namespace secondcharge.api.Controllers
         // DELETE: https://localhost:portnumber/api/locations/{id}
         [HttpDelete]
         [Route("{id:Guid}")]
-        public IActionResult Delete([FromRoute] Guid id)
+        public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
-            var locationDomainModel = dbContext.Locations.FirstOrDefault(x => x.Id == id);
+            var locationDomainModel = await dbContext.Locations.FirstOrDefaultAsync(x => x.Id == id);
 
             if (locationDomainModel == null)
             {
@@ -143,8 +144,8 @@ namespace secondcharge.api.Controllers
             }
 
             // Delete location
-            dbContext.Locations.Remove(locationDomainModel);
-            dbContext.SaveChanges();
+            dbContext.Locations.Remove(locationDomainModel); // there's no async version of Remove
+            await dbContext.SaveChangesAsync();
 
             // return domainmodel to Dto
             var locationDto = new LocationDto
