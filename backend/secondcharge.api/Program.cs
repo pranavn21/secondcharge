@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using secondcharge.api.Data;
-using secondcharge.api.Repositories;
+using secondcharge.api.Repositories.Interfaces;
+using secondcharge.api.Repositories.SQL;
 
 var builder = WebApplication.CreateBuilder(args);
 

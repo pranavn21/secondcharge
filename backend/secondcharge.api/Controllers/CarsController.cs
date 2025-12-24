@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using secondcharge.api.Data;
 using secondcharge.api.Models.Domain;
 using secondcharge.api.Models.DTO;
-using secondcharge.api.Repositories;
+using secondcharge.api.Repositories.Interfaces;
 
 namespace secondcharge.api.Controllers
 {

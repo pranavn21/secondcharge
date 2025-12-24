@@ -1,8 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using secondcharge.api.Data;
 using secondcharge.api.Models.Domain;
+using secondcharge.api.Repositories.Interfaces;
 
-namespace secondcharge.api.Repositories
+namespace secondcharge.api.Repositories.SQL
 {
     public class SQLLocationRepository : ILocationRepository
     {

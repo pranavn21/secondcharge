@@ -1,6 +1,6 @@
 ﻿using secondcharge.api.Models.Domain;
 
-namespace secondcharge.api.Repositories
+namespace secondcharge.api.Repositories.Interfaces
 {
     public interface ICarRepository
     {
