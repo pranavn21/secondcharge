@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using secondcharge.api.Data;
+using secondcharge.api.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +13,11 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<SecondChargeDbContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("SecondChargeConnectionString")));
+
+builder.Services.AddScoped<ICarRepository, SQLCarRepository>();
+builder.Services.AddScoped<IUserRepository, SQLUserRepository>();
+builder.Services.AddScoped<ILocationRepository, SQLLocationRepository>();
+builder.Services.AddScoped<IVehicleListingRepository, SQLVehicleListingRepository>();
 
 // Add CORS policy
 builder.Services.AddCors(options =>

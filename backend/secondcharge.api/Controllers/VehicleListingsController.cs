@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using secondcharge.api.Data;
 using secondcharge.api.Models.Domain;
 using secondcharge.api.Models.DTO;
+using secondcharge.api.Repositories;
 
 namespace secondcharge.api.Controllers
 {
@@ -12,10 +13,12 @@ namespace secondcharge.api.Controllers
     public class VehicleListingsController : ControllerBase
     {
         private readonly SecondChargeDbContext dbContext;
+        private readonly IVehicleListingRepository vehicleListingRepository;
 
-        public VehicleListingsController(SecondChargeDbContext dbContext)
+        public VehicleListingsController(SecondChargeDbContext dbContext, IVehicleListingRepository vehicleListingRepository)
         {
             this.dbContext = dbContext;
+            this.vehicleListingRepository = vehicleListingRepository;
         }
 
         // GET ALL VEHICLE LISTINGS
@@ -24,7 +27,7 @@ namespace secondcharge.api.Controllers
         public async Task<IActionResult> GetAllListings()
         {
             // Get Data from database - Domain models
-            var vehicleListingsDomain = await dbContext.VehicleListings.ToListAsync();
+            var vehicleListingsDomain = await vehicleListingRepository.GetAllVehicleListingsAsync();
 
             // Map Domain Models to DTO
             var vehicleListingsDto = new List<VehicleListingDto>();
@@ -52,7 +55,7 @@ namespace secondcharge.api.Controllers
         public async Task<IActionResult> GetVehicleListingById(Guid id)
         {
             // Get Vehicle Listing Domain Model from DB
-            var vehicleListingDomain = await dbContext.VehicleListings.FirstOrDefaultAsync(x => x.Id == id);
+            var vehicleListingDomain = await vehicleListingRepository.GetVehicleListingByIdAsync(id);
             if (vehicleListingDomain == null)
             {
                 return NotFound();
@@ -88,8 +91,7 @@ namespace secondcharge.api.Controllers
             };
 
             // Use Domain Model to create Vehicle Listing
-            await dbContext.VehicleListings.AddAsync(vehicleListingDomainModel); // Track changes, not save
-            await dbContext.SaveChangesAsync(); // This is needed to actually save the changes to the DB
+            vehicleListingDomainModel = await vehicleListingRepository.CreateAsync(vehicleListingDomainModel);
 
             // Map Domain model back to DTO
             var vehicleListingDto = new VehicleListingDto
@@ -113,22 +115,24 @@ namespace secondcharge.api.Controllers
         [Route("{id:Guid}")]
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateVehicleListingRequestDto updateVehicleListingRequestDto)
         {
-            var vehicleListingDomainModel = await dbContext.VehicleListings.FirstOrDefaultAsync(x => x.Id == id);
+            // Map DTO to Domain Model
+            var vehicleListingDomainModel = new VehicleListing
+            {
+                CarId = updateVehicleListingRequestDto.CarId,
+                Mileage = updateVehicleListingRequestDto.Mileage,
+                Color = updateVehicleListingRequestDto.Color,
+                listingLocationId = updateVehicleListingRequestDto.listingLocationId,
+                Price = updateVehicleListingRequestDto.Price
+            };
+
+            vehicleListingDomainModel = await vehicleListingRepository.UpdateAsync(id, vehicleListingDomainModel);
 
             if (vehicleListingDomainModel == null)
             {
                 return NotFound();
             }
 
-            // Map DTO to Domain Model
-            vehicleListingDomainModel.CarId = updateVehicleListingRequestDto.CarId;
-            vehicleListingDomainModel.Mileage = updateVehicleListingRequestDto.Mileage;
-            vehicleListingDomainModel.Color = updateVehicleListingRequestDto.Color;
-            vehicleListingDomainModel.listingLocationId = updateVehicleListingRequestDto.listingLocationId;
-            vehicleListingDomainModel.Price = updateVehicleListingRequestDto.Price;
-
-            await dbContext.SaveChangesAsync(); // don't need to add/update anything to the domain model as the domain model is being tracked, so we just need to save the changes
-
+            // Map Domain model back to DTO
             var vehicleListingDto = new VehicleListingDto
             {
                 Id = vehicleListingDomainModel.Id,
@@ -148,16 +152,12 @@ namespace secondcharge.api.Controllers
         [Route("{id:Guid}")]
         public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
-            var vehicleListingDomainModel = await dbContext.VehicleListings.FirstOrDefaultAsync(x => x.Id == id);
+            var vehicleListingDomainModel = await vehicleListingRepository.DeleteAsync(id);
 
             if (vehicleListingDomainModel == null)
             {
                 return NotFound();
             }
-
-            // Delete vehicle listing
-            dbContext.VehicleListings.Remove(vehicleListingDomainModel); // there's no async version of Remove
-            await dbContext.SaveChangesAsync();
 
             // return domainmodel to Dto
             var vehicleListingDto = new VehicleListingDto

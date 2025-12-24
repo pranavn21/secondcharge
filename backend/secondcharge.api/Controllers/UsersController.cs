@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using secondcharge.api.Data;
 using secondcharge.api.Models.Domain;
 using secondcharge.api.Models.DTO;
+using secondcharge.api.Repositories;
 
 namespace secondcharge.api.Controllers
 {
@@ -12,10 +13,12 @@ namespace secondcharge.api.Controllers
     public class UsersController : ControllerBase
     {
         private readonly SecondChargeDbContext dbContext;
+        private readonly IUserRepository userRepository;
 
-        public UsersController(SecondChargeDbContext dbContext)
+        public UsersController(SecondChargeDbContext dbContext, IUserRepository userRepository)
         {
             this.dbContext = dbContext;
+            this.userRepository = userRepository;
         }
 
         // GET ALL USERS
@@ -24,7 +27,7 @@ namespace secondcharge.api.Controllers
         public async Task<IActionResult> GetAllUsers()
         {
             // Get Data from database - Domain models
-            var usersDomain = await dbContext.Users.ToListAsync();
+            var usersDomain = await userRepository.GetAllUsersAsync();
 
             // Map Domain Models to DTO
             var usersDto = new List<UserDto>();
@@ -52,7 +55,7 @@ namespace secondcharge.api.Controllers
         public async Task<IActionResult> GetUserById(Guid id)
         {
             // Get User Domain Model from DB
-            var userDomain = await dbContext.Users.FirstOrDefaultAsync(x => x.Id == id);
+            var userDomain = await userRepository.GetUserByIdAsync(id);
             if (userDomain == null)
             {
                 return NotFound();
@@ -88,8 +91,7 @@ namespace secondcharge.api.Controllers
             };
 
             // Use Domain Model to create User
-            await dbContext.Users.AddAsync(userDomainModel); // Track changes, not save
-            await dbContext.SaveChangesAsync(); // This is needed to actually save the changes to the DB
+            userDomainModel = await userRepository.CreateAsync(userDomainModel);
 
             // Map Domain model back to DTO
             var userDto = new UserDto
@@ -113,22 +115,24 @@ namespace secondcharge.api.Controllers
         [Route("{id:Guid}")]
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateUserRequestDto updateUserRequestDto)
         {
-            var userDomainModel = await dbContext.Users.FirstOrDefaultAsync(x => x.Id == id);
+            // Map DTO to Domain Model
+            var userDomainModel = new User
+            {
+                UserName = updateUserRequestDto.UserName,
+                Password = updateUserRequestDto.Password,
+                userLocationId = updateUserRequestDto.userLocationId,
+                UserRole = updateUserRequestDto.UserRole,
+                UserPhoneNumber = updateUserRequestDto.UserPhoneNumber
+            };
+
+            userDomainModel = await userRepository.UpdateAsync(id, userDomainModel);
 
             if (userDomainModel == null)
             {
                 return NotFound();
             }
 
-            // Map DTO to Domain Model
-            userDomainModel.UserName = updateUserRequestDto.UserName;
-            userDomainModel.Password = updateUserRequestDto.Password;
-            userDomainModel.userLocationId = updateUserRequestDto.userLocationId;
-            userDomainModel.UserRole = updateUserRequestDto.UserRole;
-            userDomainModel.UserPhoneNumber = updateUserRequestDto.UserPhoneNumber;
-
-            await dbContext.SaveChangesAsync(); // don't need to add/update anything to the domain model as the domain model is being tracked, so we just need to save the changes
-
+            // Map Domain model back to DTO
             var userDto = new UserDto
             {
                 Id = userDomainModel.Id,
@@ -148,16 +152,12 @@ namespace secondcharge.api.Controllers
         [Route("{id:Guid}")]
         public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
-            var userDomainModel = await dbContext.Users.FirstOrDefaultAsync(x => x.Id == id);
+            var userDomainModel = await userRepository.DeleteAsync(id);
 
             if (userDomainModel == null)
             {
                 return NotFound();
             }
-
-            // Delete user
-            dbContext.Users.Remove(userDomainModel); // there's no async version of Remove
-            await dbContext.SaveChangesAsync();
 
             // return domainmodel to Dto
             var userDto = new UserDto

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using secondcharge.api.Data;
 using secondcharge.api.Models.Domain;
 using secondcharge.api.Models.DTO;
+using secondcharge.api.Repositories;
 
 namespace secondcharge.api.Controllers
 {
@@ -13,10 +14,12 @@ namespace secondcharge.api.Controllers
     public class CarsController : ControllerBase
     {
         private readonly SecondChargeDbContext dbContext;
+        private readonly ICarRepository carRepository;
 
-        public CarsController(SecondChargeDbContext dbContext)
+        public CarsController(SecondChargeDbContext dbContext, ICarRepository carRepository)
         {
             this.dbContext = dbContext;
+            this.carRepository = carRepository;
         }
 
         // GET ALL CARS
@@ -25,8 +28,8 @@ namespace secondcharge.api.Controllers
         public async Task<IActionResult> GetAllCars()
         {
             // Get Data from database - Domain models
-            var carsDomain = await dbContext.Cars.ToListAsync();
-
+            var carsDomain = await carRepository.GetAllCarsAsync();
+              
             // Map Domain Models to DTO
             var carsDto = new List<CarDto>();
             foreach (var carDomain in carsDomain)
@@ -53,7 +56,7 @@ namespace secondcharge.api.Controllers
         {
             //var car = dbContext.Cars.Find(id);
             // Get Car Domain Model from DB
-            var carDomain = await dbContext.Cars.FirstOrDefaultAsync(x => x.Id == id);
+            var carDomain = await carRepository.GetCarByIdAsync(id);
             if (carDomain == null)
             {
                 return NotFound();
@@ -87,8 +90,7 @@ namespace secondcharge.api.Controllers
             };
 
             // Use Domain Model to create Cars
-            await dbContext.Cars.AddAsync(carDomainModel); // Track changes, not save
-            await dbContext.SaveChangesAsync(); // This is needed to actually save the changes to the DB
+            carDomainModel = await carRepository.CreateAsync(carDomainModel);
 
             // Map Domain model back to DTO
             var carDto = new CarDto
@@ -111,21 +113,23 @@ namespace secondcharge.api.Controllers
         [Route("{id:Guid}")]
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateCarRequestDto updateCarRequestDto)
         {
-            var carDomainModel = await dbContext.Cars.FirstOrDefaultAsync(x => x.Id == id);
+            // Map DTO to Domain Model
+            var carDomainModel = new Car
+            {
+                Make = updateCarRequestDto.Make,
+                Model = updateCarRequestDto.Model,
+                Efficiency = updateCarRequestDto.Efficiency,
+                ModelImageUrl = updateCarRequestDto.ModelImageUrl
+            };
+
+            carDomainModel = await carRepository.UpdateAsync(id, carDomainModel);
 
             if (carDomainModel == null)
             {
                 return NotFound();
             }
 
-            // Map DTO to Domain Model
-            carDomainModel.Make = updateCarRequestDto.Make;
-            carDomainModel.Model = updateCarRequestDto.Model;
-            carDomainModel.Efficiency = updateCarRequestDto.Efficiency;
-            carDomainModel.ModelImageUrl = updateCarRequestDto.ModelImageUrl;
-
-            await dbContext.SaveChangesAsync(); // don't need to add/update anything to the domain model as the domain model is being tracked, so we just need to save the changes
-
+            // Map Domain model back to DTO
             var carDto = new CarDto
             {
                 Id = carDomainModel.Id,
@@ -144,16 +148,12 @@ namespace secondcharge.api.Controllers
         [Route("{id:Guid}")]
         public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
-            var carDomainModel = await dbContext.Cars.FirstOrDefaultAsync(x => x.Id == id);
+            var carDomainModel = await carRepository.DeleteAsync(id);
 
             if (carDomainModel == null)
             {
                 return NotFound();
             }
-
-            // Delete car
-            dbContext.Cars.Remove(carDomainModel); // there's no async version of Remove
-            await dbContext.SaveChangesAsync();
 
             // return domainmodel to Dto
             var carDto = new CarDto
