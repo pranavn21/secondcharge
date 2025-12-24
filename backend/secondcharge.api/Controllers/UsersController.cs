@@ -1,7 +1,10 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using secondcharge.api.Data;
 using secondcharge.api.Models.Domain;
 using secondcharge.api.Models.DTO;
+using secondcharge.api.Repositories.Interfaces;
 
 namespace secondcharge.api.Controllers
 {
@@ -11,95 +14,58 @@ namespace secondcharge.api.Controllers
     public class UsersController : ControllerBase
     {
         private readonly SecondChargeDbContext dbContext;
+        private readonly IUserRepository userRepository;
+        private readonly IMapper mapper;
 
-        public UsersController(SecondChargeDbContext dbContext)
+        public UsersController(SecondChargeDbContext dbContext, IUserRepository userRepository, IMapper mapper)
         {
             this.dbContext = dbContext;
+            this.userRepository = userRepository;
+            this.mapper = mapper;
         }
 
         // GET ALL USERS
         // GET: https://localhost:portnumber/api/users
         [HttpGet]
-        public IActionResult GetAllUsers()
+        public async Task<IActionResult> GetAllUsers()
         {
             // Get Data from database - Domain models
-            var usersDomain = dbContext.Users.ToList();
+            var usersDomain = await userRepository.GetAllUsersAsync();
 
-            // Map Domain Models to DTO
-            var usersDto = new List<UserDto>();
-            foreach (var userDomain in usersDomain)
-            {
-                usersDto.Add(new UserDto()
-                {
-                    Id = userDomain.Id,
-                    UserName = userDomain.UserName,
-                    Password = userDomain.Password,
-                    userLocationId = userDomain.userLocationId,
-                    UserRole = userDomain.UserRole,
-                    UserPhoneNumber = userDomain.UserPhoneNumber
-                });
-            }
-
-            // Return DTOs
-            return Ok(usersDto);
+            // Map domain to DTO & return DTOs
+            return Ok(mapper.Map<List<UserDto>>(usersDomain));
         }
 
         // GET A USER BY ID
         // GET: https://localhost:portnumber/api/users/{id}
         [HttpGet]
         [Route("{id:Guid}")]
-        public IActionResult GetUserById(Guid id)
+        public async Task<IActionResult> GetUserById(Guid id)
         {
             // Get User Domain Model from DB
-            var userDomain = dbContext.Users.FirstOrDefault(x => x.Id == id);
+            var userDomain = await userRepository.GetUserByIdAsync(id);
             if (userDomain == null)
             {
                 return NotFound();
             }
 
-            // Map/Convert User Domain Model to User DTO
-            var userDto = new UserDto
-            {
-                Id = userDomain.Id,
-                UserName = userDomain.UserName,
-                Password = userDomain.Password,
-                userLocationId = userDomain.userLocationId,
-                UserRole = userDomain.UserRole,
-                UserPhoneNumber = userDomain.UserPhoneNumber
-            };
-
-            return Ok(userDto);
+            // Map/Convert User Domain Model to User DTO and return it
+            return Ok(mapper.Map<UserDto>(userDomain));
         }
 
         // POST To Create New User
         // POST: https://localhost:portnumber/api/users
         [HttpPost]
-        public IActionResult Create([FromBody] AddUserRequestDto addUserRequestDto)
+        public async Task<IActionResult> Create([FromBody] AddUserRequestDto addUserRequestDto)
         {
             // Map DTO to Domain Model
-            var userDomainModel = new User
-            {
-                UserName = addUserRequestDto.UserName,
-                Password = addUserRequestDto.Password,
-                userLocationId = addUserRequestDto.userLocationId,
-                UserRole = addUserRequestDto.UserRole,
-                UserPhoneNumber = addUserRequestDto.UserPhoneNumber
-            };
+            var userDomainModel = mapper.Map<User>(addUserRequestDto);
 
             // Use Domain Model to create User
-            dbContext.Users.Add(userDomainModel); // Track changes, not save
-            dbContext.SaveChanges(); // This is needed to actually save the changes to the DB
+            userDomainModel = await userRepository.CreateAsync(userDomainModel);
 
             // Map Domain model back to DTO
-            var userDto = new UserDto
-            {
-                Id = userDomainModel.Id,
-                UserName = userDomainModel.UserName,
-                Password = userDomainModel.Password,
-                userLocationId = userDomainModel.userLocationId,
-                UserRole = userDomainModel.UserRole,
-                UserPhoneNumber = userDomainModel.UserPhoneNumber
-            };
+            var userDto = mapper.Map<UserDto>(userDomainModel);
 
             // Using CreatedAtAction, we generate a 201 response that auto-generates a Location header to tell the client where to retrieve the new resource
             // first parameter is needed to get the action method to retrieve the resource, then we need to route value for that method, then response body
@@ -110,66 +76,37 @@ namespace secondcharge.api.Controllers
         // PUT: https://localhost:portnumber/api/users/{id}
         [HttpPut]
         [Route("{id:Guid}")]
-        public IActionResult Update([FromRoute] Guid id, [FromBody] UpdateUserRequestDto updateUserRequestDto)
+        public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateUserRequestDto updateUserRequestDto)
         {
-            var userDomainModel = dbContext.Users.FirstOrDefault(x => x.Id == id);
+            // Map DTO to Domain Model
+            var userDomainModel = mapper.Map<User>(updateUserRequestDto);
+
+            userDomainModel = await userRepository.UpdateAsync(id, userDomainModel);
 
             if (userDomainModel == null)
             {
                 return NotFound();
             }
 
-            // Map DTO to Domain Model
-            userDomainModel.UserName = updateUserRequestDto.UserName;
-            userDomainModel.Password = updateUserRequestDto.Password;
-            userDomainModel.userLocationId = updateUserRequestDto.userLocationId;
-            userDomainModel.UserRole = updateUserRequestDto.UserRole;
-            userDomainModel.UserPhoneNumber = updateUserRequestDto.UserPhoneNumber;
-
-            dbContext.SaveChanges(); // don't need to add/update anything to the domain model as the domain model is being tracked, so we just need to save the changes
-
-            var userDto = new UserDto
-            {
-                Id = userDomainModel.Id,
-                UserName = userDomainModel.UserName,
-                Password = userDomainModel.Password,
-                userLocationId = userDomainModel.userLocationId,
-                UserRole = userDomainModel.UserRole,
-                UserPhoneNumber = userDomainModel.UserPhoneNumber
-            };
-
-            return Ok(userDto);
+            // Map Domain model back to DTO and return it
+            return Ok(mapper.Map<UserDto>(userDomainModel));
         }
 
         // Delete User
         // DELETE: https://localhost:portnumber/api/users/{id}
         [HttpDelete]
         [Route("{id:Guid}")]
-        public IActionResult Delete([FromRoute] Guid id)
+        public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
-            var userDomainModel = dbContext.Users.FirstOrDefault(x => x.Id == id);
+            var userDomainModel = await userRepository.DeleteAsync(id);
 
             if (userDomainModel == null)
             {
                 return NotFound();
             }
 
-            // Delete user
-            dbContext.Users.Remove(userDomainModel);
-            dbContext.SaveChanges();
-
-            // return domainmodel to Dto
-            var userDto = new UserDto
-            {
-                Id = userDomainModel.Id,
-                UserName = userDomainModel.UserName,
-                Password = userDomainModel.Password,
-                userLocationId = userDomainModel.userLocationId,
-                UserRole = userDomainModel.UserRole,
-                UserPhoneNumber = userDomainModel.UserPhoneNumber
-            };
-
-            return Ok(userDto);
+            // return domainmodel to Dto and return it
+            return Ok(mapper.Map<UserDto>(userDomainModel));
         }
     }
 }

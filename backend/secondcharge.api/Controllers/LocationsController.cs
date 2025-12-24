@@ -1,7 +1,10 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using secondcharge.api.Data;
 using secondcharge.api.Models.Domain;
 using secondcharge.api.Models.DTO;
+using secondcharge.api.Repositories.Interfaces;
 
 namespace secondcharge.api.Controllers
 {
@@ -11,87 +14,58 @@ namespace secondcharge.api.Controllers
     public class LocationsController : ControllerBase
     {
         private readonly SecondChargeDbContext dbContext;
+        private readonly ILocationRepository locationRepository;
+        private readonly IMapper mapper;
 
-        public LocationsController(SecondChargeDbContext dbContext)
+        public LocationsController(SecondChargeDbContext dbContext, ILocationRepository locationRepository, IMapper mapper)
         {
             this.dbContext = dbContext;
+            this.locationRepository = locationRepository;
+            this.mapper = mapper;
         }
 
         // GET ALL LOCATIONS
         // GET: https://localhost:portnumber/api/locations
         [HttpGet]
-        public IActionResult GetAllLocations()
+        public async Task<IActionResult> GetAllLocations()
         {
             // Get Data from database - Domain models
-            var locationsDomain = dbContext.Locations.ToList();
+            var locationsDomain = await locationRepository.GetAllLocationsAsync();
 
-            // Map Domain Models to DTO
-            var locationsDto = new List<LocationDto>();
-            foreach (var locationDomain in locationsDomain)
-            {
-                locationsDto.Add(new LocationDto()
-                {
-                    Id = locationDomain.Id,
-                    Country = locationDomain.Country,
-                    State = locationDomain.State,
-                    zipCode = locationDomain.zipCode
-                });
-            }
-
-            // Return DTOs
-            return Ok(locationsDto);
+            // Map domain to DTO & return DTOs
+            return Ok(mapper.Map<List<LocationDto>>(locationsDomain));
         }
 
         // GET A LOCATION BY ID
         // GET: https://localhost:portnumber/api/locations/{id}
         [HttpGet]
         [Route("{id:Guid}")]
-        public IActionResult GetLocationById(Guid id)
+        public async Task<IActionResult> GetLocationById(Guid id)
         {
             // Get Location Domain Model from DB
-            var locationDomain = dbContext.Locations.FirstOrDefault(x => x.Id == id);
+            var locationDomain = await locationRepository.GetLocationByIdAsync(id);
             if (locationDomain == null)
             {
                 return NotFound();
             }
 
-            // Map/Convert Location Domain Model to Location DTO
-            var locationDto = new LocationDto
-            {
-                Id = locationDomain.Id,
-                Country = locationDomain.Country,
-                State = locationDomain.State,
-                zipCode = locationDomain.zipCode
-            };
-
-            return Ok(locationDto);
+            // Map/Convert Location Domain Model to Location DTO and return it
+            return Ok(mapper.Map<LocationDto>(locationDomain));
         }
 
         // POST To Create New Location
         // POST: https://localhost:portnumber/api/locations
         [HttpPost]
-        public IActionResult Create([FromBody] AddLocationRequestDto addLocationRequestDto)
+        public async Task<IActionResult> Create([FromBody] AddLocationRequestDto addLocationRequestDto)
         {
             // Map DTO to Domain Model
-            var locationDomainModel = new Location
-            {
-                Country = addLocationRequestDto.Country,
-                State = addLocationRequestDto.State,
-                zipCode = addLocationRequestDto.zipCode
-            };
+            var locationDomainModel = mapper.Map<Location>(addLocationRequestDto);
 
             // Use Domain Model to create Location
-            dbContext.Locations.Add(locationDomainModel); // Track changes, not save
-            dbContext.SaveChanges(); // This is needed to actually save the changes to the DB
+            locationDomainModel = await locationRepository.CreateAsync(locationDomainModel);
 
             // Map Domain model back to DTO
-            var locationDto = new LocationDto
-            {
-                Id = locationDomainModel.Id,
-                Country = locationDomainModel.Country,
-                State = locationDomainModel.State,
-                zipCode = locationDomainModel.zipCode
-            };
+            var locationDto = mapper.Map<LocationDto>(locationDomainModel);
 
             // Using CreatedAtAction, we generate a 201 response that auto-generates a Location header to tell the client where to retrieve the new resource
             // first parameter is needed to get the action method to retrieve the resource, then we need to route value for that method, then response body
@@ -102,60 +76,37 @@ namespace secondcharge.api.Controllers
         // PUT: https://localhost:portnumber/api/locations/{id}
         [HttpPut]
         [Route("{id:Guid}")]
-        public IActionResult Update([FromRoute] Guid id, [FromBody] UpdateLocationRequestDto updateLocationRequestDto)
+        public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateLocationRequestDto updateLocationRequestDto)
         {
-            var locationDomainModel = dbContext.Locations.FirstOrDefault(x => x.Id == id);
+            // Map DTO to Domain Model
+            var locationDomainModel = mapper.Map<Location>(updateLocationRequestDto);
+
+            locationDomainModel = await locationRepository.UpdateAsync(id, locationDomainModel);
 
             if (locationDomainModel == null)
             {
                 return NotFound();
             }
 
-            // Map DTO to Domain Model
-            locationDomainModel.Country = updateLocationRequestDto.Country;
-            locationDomainModel.State = updateLocationRequestDto.State;
-            locationDomainModel.zipCode = updateLocationRequestDto.zipCode;
-
-            dbContext.SaveChanges(); // don't need to add/update anything to the domain model as the domain model is being tracked, so we just need to save the changes
-
-            var locationDto = new LocationDto
-            {
-                Id = locationDomainModel.Id,
-                Country = locationDomainModel.Country,
-                State = locationDomainModel.State,
-                zipCode = locationDomainModel.zipCode
-            };
-
-            return Ok(locationDto);
+            // Map Domain model back to DTO and return it
+            return Ok(mapper.Map<LocationDto>(locationDomainModel));
         }
 
         // Delete Location
         // DELETE: https://localhost:portnumber/api/locations/{id}
         [HttpDelete]
         [Route("{id:Guid}")]
-        public IActionResult Delete([FromRoute] Guid id)
+        public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
-            var locationDomainModel = dbContext.Locations.FirstOrDefault(x => x.Id == id);
+            var locationDomainModel = await locationRepository.DeleteAsync(id);
 
             if (locationDomainModel == null)
             {
                 return NotFound();
             }
 
-            // Delete location
-            dbContext.Locations.Remove(locationDomainModel);
-            dbContext.SaveChanges();
-
-            // return domainmodel to Dto
-            var locationDto = new LocationDto
-            {
-                Id = locationDomainModel.Id,
-                Country = locationDomainModel.Country,
-                State = locationDomainModel.State,
-                zipCode = locationDomainModel.zipCode
-            };
-
-            return Ok(locationDto);
+            // return domainmodel to Dto and return it
+            return Ok(mapper.Map<LocationDto>(locationDomainModel));
         }
     }
 }
