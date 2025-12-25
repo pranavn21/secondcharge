@@ -44,7 +44,7 @@ namespace secondcharge.api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Cars", (string)null);
+                    b.ToTable("Cars");
                 });
 
             modelBuilder.Entity("secondcharge.api.Models.Domain.Location", b =>
@@ -67,13 +67,39 @@ namespace secondcharge.api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Locations", (string)null);
+                    b.ToTable("Locations");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("43b494e9-9d33-421f-85a3-62cc58dd7e99"),
+                            Country = "USA",
+                            State = "NJ",
+                            zipCode = "94820"
+                        },
+                        new
+                        {
+                            Id = new Guid("9954836d-5a9f-4d3f-b156-12f32ff0306a"),
+                            Country = "IR",
+                            State = "DUB",
+                            zipCode = "43 9VA"
+                        },
+                        new
+                        {
+                            Id = new Guid("6a8ad14d-8482-4ff4-8f82-28abd6ddc21a"),
+                            Country = "NR",
+                            State = "OSL",
+                            zipCode = "333 5BA"
+                        });
                 });
 
             modelBuilder.Entity("secondcharge.api.Models.Domain.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("LocationId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Password")
@@ -92,14 +118,11 @@ namespace secondcharge.api.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("userLocationId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("userLocationId");
+                    b.HasIndex("LocationId");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("secondcharge.api.Models.Domain.VehicleListing", b =>
@@ -128,20 +151,18 @@ namespace secondcharge.api.Migrations
 
                     b.HasIndex("CarId");
 
-                    b.HasIndex("listingLocationId");
-
-                    b.ToTable("VehicleListings", (string)null);
+                    b.ToTable("VehicleListings");
                 });
 
             modelBuilder.Entity("secondcharge.api.Models.Domain.User", b =>
                 {
-                    b.HasOne("secondcharge.api.Models.Domain.Location", "userLocation")
+                    b.HasOne("secondcharge.api.Models.Domain.Location", "Location")
                         .WithMany()
-                        .HasForeignKey("userLocationId")
+                        .HasForeignKey("LocationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("userLocation");
+                    b.Navigation("Location");
                 });
 
             modelBuilder.Entity("secondcharge.api.Models.Domain.VehicleListing", b =>
@@ -152,15 +173,7 @@ namespace secondcharge.api.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("secondcharge.api.Models.Domain.Location", "listingLocation")
-                        .WithMany()
-                        .HasForeignKey("listingLocationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("CarModel");
-
-                    b.Navigation("listingLocation");
                 });
 #pragma warning restore 612, 618
         }
