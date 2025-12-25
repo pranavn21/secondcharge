@@ -36,12 +36,12 @@ namespace secondcharge.api.Repositories.SQL
 
         public async Task<List<User>> GetAllUsersAsync()
         {
-            return await dbContext.Users.ToListAsync();
+            return await dbContext.Users.Include("Location").ToListAsync();
         }
 
         public async Task<User?> GetUserByIdAsync(Guid id)
         {
-            return await dbContext.Users.FirstOrDefaultAsync(x => x.Id == id);
+            return await dbContext.Users.Include("Location").FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<User?> UpdateAsync(Guid id, User user)
@@ -53,7 +53,7 @@ namespace secondcharge.api.Repositories.SQL
             }
             existingUser.UserName = user.UserName;
             existingUser.Password = user.Password;
-            existingUser.userLocationId = user.userLocationId;
+            existingUser.LocationId = user.LocationId;
             existingUser.UserRole = user.UserRole;
             existingUser.UserPhoneNumber = user.UserPhoneNumber;
 
