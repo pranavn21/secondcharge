@@ -1,63 +1,42 @@
-# Secondcharge
+# SecondCharge
 
 ## Created by Abby Arce and Pranav Nair
 
-### An e-commerce website where users can buy or sell EV vehicles.
+SecondCharge is a full-stack EV marketplace project. The goal is to make it easy to browse EV models and build out a real listing workflow (create, search, and manage listings) backed by a database.
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.1.8.
+This repository contains both the Angular frontend and the .NET backend.
 
-## Development server
+## Repo layout
 
-To start a local development server, run:
+- `frontend/` — Angular application (UI)
+- `backend/` — ASP.NET Core API + SQL Server (services + data)
 
-```bash
-ng serve
-```
+## Tech stack
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+- Frontend: Angular (generated with Angular CLI)
+- Backend: ASP.NET Core Web API (C#)
+- Database: Microsoft SQL Server
 
-## Code scaffolding
+## Local setup
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+### Prerequisites
 
-```bash
-ng generate component component-name
-```
+- Node.js (LTS) + npm
+- Angular CLI (match the version used by the frontend project)
+- .NET SDK (recent version)
+- SQL Server (LocalDB, Docker, or a full SQL Server instance) + SSMS optional
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+### 1) Database
 
-```bash
-ng generate --help
-```
+1. Create a SQL Server database (local is fine).
+2. Update the backend connection string (see configuration section below).
+3. Create tables / run migrations (depending on how your backend is currently set up).
+4. Optional: seed data (for example, `dbo.Cars`) so the UI has something to show.
 
-## Building
+### 2) Backend (API)
 
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+From the `backend/` directory:
 
 ```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+dotnet restore
+dotnet run
