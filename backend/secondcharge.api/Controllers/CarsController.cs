@@ -60,6 +60,12 @@ namespace secondcharge.api.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] AddCarRequestDto addCarRequestDto)
         {
+            // This checks if the incoming request body satisfies all validation attributes defined in the DTO
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             // Map DTO to Domain Model
             var carDomainModel = mapper.Map<Car>(addCarRequestDto);
 
@@ -80,6 +86,11 @@ namespace secondcharge.api.Controllers
         [Route("{id:Guid}")]
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateCarRequestDto updateCarRequestDto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             // Map DTO to Domain Model
             var carDomainModel = mapper.Map<Car>(updateCarRequestDto);
 

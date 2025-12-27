@@ -58,6 +58,11 @@ namespace secondcharge.api.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] AddVehicleListingRequestDto addVehicleListingRequestDto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             // Map DTO to Domain Model
             var vehicleListingDomainModel = mapper.Map<VehicleListing>(addVehicleListingRequestDto);
 
@@ -78,6 +83,11 @@ namespace secondcharge.api.Controllers
         [Route("{id:Guid}")]
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateVehicleListingRequestDto updateVehicleListingRequestDto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             // Map DTO to Domain Model
             var vehicleListingDomainModel = mapper.Map<VehicleListing>(updateVehicleListingRequestDto);
 
