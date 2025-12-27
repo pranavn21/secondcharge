@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using secondcharge.api.CustomActionFilters;
 using secondcharge.api.Data;
 using secondcharge.api.Models.Domain;
 using secondcharge.api.Models.DTO;
@@ -56,13 +57,9 @@ namespace secondcharge.api.Controllers
         // POST To Create New Vehicle Listing
         // POST: https://localhost:portnumber/api/vehiclelistings
         [HttpPost]
+        [ValidateModel]
         public async Task<IActionResult> Create([FromBody] AddVehicleListingRequestDto addVehicleListingRequestDto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             // Map DTO to Domain Model
             var vehicleListingDomainModel = mapper.Map<VehicleListing>(addVehicleListingRequestDto);
 
@@ -81,13 +78,9 @@ namespace secondcharge.api.Controllers
         // PUT: https://localhost:portnumber/api/vehiclelistings/{id}
         [HttpPut]
         [Route("{id:Guid}")]
+        [ValidateModel]
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateVehicleListingRequestDto updateVehicleListingRequestDto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             // Map DTO to Domain Model
             var vehicleListingDomainModel = mapper.Map<VehicleListing>(updateVehicleListingRequestDto);
 
