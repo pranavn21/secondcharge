@@ -10,5 +10,9 @@ namespace secondcharge.api.Models.DTO
         public string Color { get; set; }
         public Guid listingLocationId { get; set; }
         public double Price { get; set; }
+        public Guid UserId { get; set; }
+        public CarDto? CarModel { get; set; }
+        public LocationDto? ListingLocation { get; set; }
+        public UserDto? User { get; set; }
     }
 }

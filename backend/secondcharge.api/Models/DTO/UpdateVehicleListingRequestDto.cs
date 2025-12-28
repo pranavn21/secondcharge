@@ -18,5 +18,8 @@ namespace secondcharge.api.Models.DTO
 
         [Required]
         public double Price { get; set; }
+
+        [Required]
+        public Guid UserId { get; set; }
     }
 }

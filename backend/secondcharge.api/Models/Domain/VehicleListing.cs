@@ -11,6 +11,10 @@ namespace secondcharge.api.Models.Domain
         public string Color { get; set; }
         public Guid listingLocationId { get; set; }
         public double Price { get; set; }
+        public Guid UserId { get; set; }
 
+        // Navigational properties
+        public User User { get; set; }
+        public Location ListingLocation { get; set; }
     }
 }
