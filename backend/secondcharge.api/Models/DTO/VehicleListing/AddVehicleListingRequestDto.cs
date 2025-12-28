@@ -1,7 +1,6 @@
 using System.ComponentModel.DataAnnotations;
-using secondcharge.api.Models.Domain;
 
-namespace secondcharge.api.Models.DTO
+namespace secondcharge.api.Models.DTO.VehicleListing
 {
     public class AddVehicleListingRequestDto
     {

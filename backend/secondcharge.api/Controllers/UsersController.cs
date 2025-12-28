@@ -1,9 +1,8 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using secondcharge.api.Data;
 using secondcharge.api.Models.Domain;
-using secondcharge.api.Models.DTO;
+using secondcharge.api.Models.DTO.User;
 using secondcharge.api.Repositories.Interfaces;
 
 namespace secondcharge.api.Controllers

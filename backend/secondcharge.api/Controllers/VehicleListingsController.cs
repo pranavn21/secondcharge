@@ -1,11 +1,9 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using secondcharge.api.CustomActionFilters;
 using secondcharge.api.Data;
 using secondcharge.api.Models.Domain;
-using secondcharge.api.Models.DTO;
+using secondcharge.api.Models.DTO.VehicleListing;
 using secondcharge.api.Repositories.Interfaces;
 
 namespace secondcharge.api.Controllers

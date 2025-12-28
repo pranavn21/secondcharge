@@ -1,8 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
-namespace secondcharge.api.Models.DTO
+namespace secondcharge.api.Models.DTO.Car
 {
-    public class UpdateCarRequestDto
+    public class AddCarRequestDto
     {
         [Required]
         [MinLength(2, ErrorMessage = "The make has to be a minimum of 3 characters.")]
@@ -16,6 +16,7 @@ namespace secondcharge.api.Models.DTO
 
         [Required]
         public int Efficiency { get; set; }
+
         public string? ModelImageUrl { get; set; }
     }
 }

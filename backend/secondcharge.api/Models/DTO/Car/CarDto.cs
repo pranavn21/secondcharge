@@ -1,4 +1,4 @@
-﻿namespace secondcharge.api.Models.DTO
+namespace secondcharge.api.Models.DTO.Car
 {
     public class CarDto
     {

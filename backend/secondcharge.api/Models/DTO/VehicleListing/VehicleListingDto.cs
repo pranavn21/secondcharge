@@ -1,6 +1,8 @@
-using secondcharge.api.Models.Domain;
+using secondcharge.api.Models.DTO.Car;
+using secondcharge.api.Models.DTO.Location;
+using secondcharge.api.Models.DTO.User;
 
-namespace secondcharge.api.Models.DTO
+namespace secondcharge.api.Models.DTO.VehicleListing
 {
     public class VehicleListingDto
     {
