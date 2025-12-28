@@ -27,12 +27,12 @@ namespace secondcharge.api.Controllers
         }
 
         // GET ALL CARS
-        // GET: https://localhost:portnumber/api/cars
+        // GET: https://localhost:portnumber/api/cars?filterOn=Make
         [HttpGet]
-        public async Task<IActionResult> GetAllCars()
+        public async Task<IActionResult> GetAllCars([FromQuery] string? filterOn, [FromQuery] string? filterQuery)
         {
             // Get Data from database - Domain models
-            var carsDomain = await carRepository.GetAllCarsAsync();
+            var carsDomain = await carRepository.GetAllCarsAsync(filterOn, filterQuery);
 
             // Map domain to DTO & return DTOs
             return Ok(mapper.Map<List<CarDto>>(carsDomain));

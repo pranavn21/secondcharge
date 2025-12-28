@@ -4,7 +4,7 @@ namespace secondcharge.api.Repositories.Interfaces
 {
     public interface ILocationRepository
     {
-        Task<List<Location>> GetAllLocationsAsync();
+        Task<List<Location>> GetAllLocationsAsync(string? filterOn = null, string? filterQuery = null);
         Task<Location?> GetLocationByIdAsync(Guid id);
         Task<Location> CreateAsync(Location location);
         Task<Location?> UpdateAsync(Guid id, Location location);

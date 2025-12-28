@@ -34,9 +34,24 @@ namespace secondcharge.api.Repositories.SQL
             return existingUser;
         }
 
-        public async Task<List<User>> GetAllUsersAsync()
+        public async Task<List<User>> GetAllUsersAsync(string? filterOn = null, string? filterQuery = null)
         {
-            return await dbContext.Users.Include("Location").ToListAsync();
+            var users = dbContext.Users.Include(x => x.Location).AsQueryable();
+
+            // Filtering
+            if (string.IsNullOrWhiteSpace(filterOn) == false && string.IsNullOrWhiteSpace(filterQuery) == false)
+            {
+                if (filterOn.Equals("UserName", StringComparison.OrdinalIgnoreCase))
+                {
+                    users = users.Where(x => x.UserName.Contains(filterQuery));
+                }
+                else if (filterOn.Equals("UserRole", StringComparison.OrdinalIgnoreCase))
+                {
+                    users = users.Where(x => x.UserRole.Contains(filterQuery));
+                }
+            }
+
+            return await users.ToListAsync();
         }
 
         public async Task<User?> GetUserByIdAsync(Guid id)

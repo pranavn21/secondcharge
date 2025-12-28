@@ -26,12 +26,12 @@ namespace secondcharge.api.Controllers
         }
 
         // GET ALL VEHICLE LISTINGS
-        // GET: https://localhost:portnumber/api/vehiclelistings
+        // GET: https://localhost:portnumber/api/vehiclelistings?filterOn=Color&filterQuery=Blue
         [HttpGet]
-        public async Task<IActionResult> GetAllListings()
+        public async Task<IActionResult> GetAllListings([FromQuery] string? filterOn, [FromQuery] string? filterQuery)
         {
             // Get Data from database - Domain models
-            var vehicleListingsDomain = await vehicleListingRepository.GetAllVehicleListingsAsync();
+            var vehicleListingsDomain = await vehicleListingRepository.GetAllVehicleListingsAsync(filterOn, filterQuery);
 
             // Map domain to DTO & return DTOs
             return Ok(mapper.Map<List<VehicleListingDto>>(vehicleListingsDomain));

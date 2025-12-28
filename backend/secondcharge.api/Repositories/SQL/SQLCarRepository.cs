@@ -35,9 +35,23 @@ namespace secondcharge.api.Repositories.SQL
             return existingCar;
         }
 
-        public async Task<List<Car>> GetAllCarsAsync()
+        public async Task<List<Car>> GetAllCarsAsync(string? filterOn = null, string? filterQuery = null)
         {
-            return await dbContext.Cars.ToListAsync();
+            var cars = dbContext.Cars.AsQueryable();
+
+            // Filtering
+            if (string.IsNullOrWhiteSpace(filterOn) == false && string.IsNullOrWhiteSpace(filterQuery) == false) { 
+                if (filterOn.Equals("Make", StringComparison.OrdinalIgnoreCase))
+                {
+                    cars = cars.Where(x => x.Make.Contains(filterQuery));
+                }
+                else if (filterOn.Equals("Model", StringComparison.OrdinalIgnoreCase))
+                {
+                    cars = cars.Where(x => x.Model.Contains(filterQuery));
+                }
+            }
+
+            return await cars.ToListAsync();
         }
 
         public async Task<Car?> GetCarByIdAsync(Guid id)

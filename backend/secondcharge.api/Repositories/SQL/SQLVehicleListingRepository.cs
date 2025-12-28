@@ -34,9 +34,28 @@ namespace secondcharge.api.Repositories.SQL
             return existingVehicleListing;
         }
 
-        public async Task<List<VehicleListing>> GetAllVehicleListingsAsync()
+        public async Task<List<VehicleListing>> GetAllVehicleListingsAsync(string? filterOn = null, string? filterQuery = null)
         {
-            return await dbContext.VehicleListings.ToListAsync();
+            var vehicleListings = dbContext.VehicleListings.AsQueryable();
+
+            // Filtering
+            if (string.IsNullOrWhiteSpace(filterOn) == false && string.IsNullOrWhiteSpace(filterQuery) == false)
+            {
+                if (filterOn.Equals("Color", StringComparison.OrdinalIgnoreCase))
+                {
+                    vehicleListings = vehicleListings.Where(x => x.Color.Contains(filterQuery));
+                }
+                else if (filterOn.Equals("Price", StringComparison.OrdinalIgnoreCase))
+                {
+                    // For price, try to parse the query as a double for exact or range matching
+                    if (double.TryParse(filterQuery, out double priceValue))
+                    {
+                        vehicleListings = vehicleListings.Where(x => x.Price <= priceValue);
+                    }
+                }
+            }
+
+            return await vehicleListings.ToListAsync();
         }
 
         public async Task<VehicleListing?> GetVehicleListingByIdAsync(Guid id)

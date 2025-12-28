@@ -34,9 +34,28 @@ namespace secondcharge.api.Repositories.SQL
             return existingLocation;
         }
 
-        public async Task<List<Location>> GetAllLocationsAsync()
+        public async Task<List<Location>> GetAllLocationsAsync(string? filterOn = null, string? filterQuery = null)
         {
-            return await dbContext.Locations.ToListAsync();
+            var locations = dbContext.Locations.AsQueryable();
+
+            // Filtering
+            if (string.IsNullOrWhiteSpace(filterOn) == false && string.IsNullOrWhiteSpace(filterQuery) == false)
+            {
+                if (filterOn.Equals("Country", StringComparison.OrdinalIgnoreCase))
+                {
+                    locations = locations.Where(x => x.Country.Contains(filterQuery));
+                }
+                else if (filterOn.Equals("State", StringComparison.OrdinalIgnoreCase))
+                {
+                    locations = locations.Where(x => x.State.Contains(filterQuery));
+                }
+                else if (filterOn.Equals("zipCode", StringComparison.OrdinalIgnoreCase))
+                {
+                    locations = locations.Where(x => x.zipCode.Contains(filterQuery));
+                }
+            }
+
+            return await locations.ToListAsync();
         }
 
         public async Task<Location?> GetLocationByIdAsync(Guid id)
