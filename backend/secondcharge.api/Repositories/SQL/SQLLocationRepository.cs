@@ -35,7 +35,7 @@ namespace secondcharge.api.Repositories.SQL
         }
 
         public async Task<List<Location>> GetAllLocationsAsync(string? filterOn = null, string? filterQuery = null, 
-            string? sortBy = null, bool isAscending = true)
+            string? sortBy = null, bool isAscending = true, int pageNumber = 1, int pageSize = 1000)
         {
             var locations = dbContext.Locations.AsQueryable();
 
@@ -72,6 +72,9 @@ namespace secondcharge.api.Repositories.SQL
                     locations = isAscending ? locations.OrderBy(x => x.zipCode) : locations.OrderByDescending(x => x.zipCode);
                 }
             }
+
+            // Pagination
+            locations = locations.Skip((pageNumber - 1) * pageSize).Take(pageSize);
 
             return await locations.ToListAsync();
         }

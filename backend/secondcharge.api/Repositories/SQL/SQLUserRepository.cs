@@ -35,7 +35,7 @@ namespace secondcharge.api.Repositories.SQL
         }
 
         public async Task<List<User>> GetAllUsersAsync(string? filterOn = null, string? filterQuery = null, 
-            string? sortBy = null, bool isAscending = true)
+            string? sortBy = null, bool isAscending = true, int pageNumber = 1, int pageSize = 1000)
         {
             var users = dbContext.Users.Include(x => x.Location).AsQueryable();
 
@@ -64,6 +64,9 @@ namespace secondcharge.api.Repositories.SQL
                     users = isAscending ? users.OrderBy(x => x.UserRole) : users.OrderByDescending(x => x.UserRole);
                 }
             }
+
+            // Pagination
+            users = users.Skip((pageNumber - 1) * pageSize).Take(pageSize);
 
             return await users.ToListAsync();
         }

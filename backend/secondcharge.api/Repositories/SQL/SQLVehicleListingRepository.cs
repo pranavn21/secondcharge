@@ -35,7 +35,7 @@ namespace secondcharge.api.Repositories.SQL
         }
 
         public async Task<List<VehicleListing>> GetAllVehicleListingsAsync(string? filterOn = null, string? filterQuery = null, 
-            string? sortBy = null, bool isAscending = true)
+            string? sortBy = null, bool isAscending = true, int pageNumber = 1, int pageSize = 1000)
         {
             var vehicleListings = dbContext.VehicleListings.AsQueryable();
 
@@ -68,6 +68,9 @@ namespace secondcharge.api.Repositories.SQL
                     vehicleListings = isAscending ? vehicleListings.OrderBy(x => x.Price) : vehicleListings.OrderByDescending(x => x.Price);
                 }
             }
+
+            // Pagination
+            vehicleListings = vehicleListings.Skip((pageNumber - 1) * pageSize).Take(pageSize);
 
             return await vehicleListings.ToListAsync();
         }

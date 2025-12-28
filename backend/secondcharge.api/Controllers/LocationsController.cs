@@ -25,12 +25,15 @@ namespace secondcharge.api.Controllers
         }
 
         // GET ALL LOCATIONS
-        // GET: https://localhost:portnumber/api/locations?filterOn=Country&filterQuery=USA&sortBy=State&isAscending=true
+        // GET: https://localhost:portnumber/api/locations?filterOn=Country&filterQuery=USA&sortBy=State&isAscending=true&pageNumber=1&pageSize=10
         [HttpGet]
-        public async Task<IActionResult> GetAllLocations([FromQuery] string? filterOn, [FromQuery] string? filterQuery, [FromQuery] string? sortBy, [FromQuery] bool? isAscending)
+        public async Task<IActionResult> GetAllLocations([FromQuery] string? filterOn, [FromQuery] string? filterQuery, 
+            [FromQuery] string? sortBy, [FromQuery] bool? isAscending,
+            [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 1000)
         {
             // Get Data from database - Domain models
-            var locationsDomain = await locationRepository.GetAllLocationsAsync(filterOn, filterQuery, sortBy, isAscending ?? true);
+            var locationsDomain = await locationRepository.GetAllLocationsAsync(filterOn, filterQuery, 
+                sortBy, isAscending ?? true, pageNumber, pageSize);
 
             // Map domain to DTO & return DTOs
             return Ok(mapper.Map<List<LocationDto>>(locationsDomain));
