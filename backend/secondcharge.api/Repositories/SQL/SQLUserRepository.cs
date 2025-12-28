@@ -34,7 +34,8 @@ namespace secondcharge.api.Repositories.SQL
             return existingUser;
         }
 
-        public async Task<List<User>> GetAllUsersAsync(string? filterOn = null, string? filterQuery = null)
+        public async Task<List<User>> GetAllUsersAsync(string? filterOn = null, string? filterQuery = null, 
+            string? sortBy = null, bool isAscending = true)
         {
             var users = dbContext.Users.Include(x => x.Location).AsQueryable();
 
@@ -48,6 +49,19 @@ namespace secondcharge.api.Repositories.SQL
                 else if (filterOn.Equals("UserRole", StringComparison.OrdinalIgnoreCase))
                 {
                     users = users.Where(x => x.UserRole.Contains(filterQuery));
+                }
+            }
+
+            // Sorting
+            if (string.IsNullOrWhiteSpace(sortBy) == false)
+            {
+                if (sortBy.Equals("UserName", StringComparison.OrdinalIgnoreCase))
+                {
+                    users = isAscending ? users.OrderBy(x => x.UserName) : users.OrderByDescending(x => x.UserName);
+                }
+                else if (sortBy.Equals("UserRole", StringComparison.OrdinalIgnoreCase))
+                {
+                    users = isAscending ? users.OrderBy(x => x.UserRole) : users.OrderByDescending(x => x.UserRole);
                 }
             }
 

@@ -34,7 +34,8 @@ namespace secondcharge.api.Repositories.SQL
             return existingLocation;
         }
 
-        public async Task<List<Location>> GetAllLocationsAsync(string? filterOn = null, string? filterQuery = null)
+        public async Task<List<Location>> GetAllLocationsAsync(string? filterOn = null, string? filterQuery = null, 
+            string? sortBy = null, bool isAscending = true)
         {
             var locations = dbContext.Locations.AsQueryable();
 
@@ -52,6 +53,23 @@ namespace secondcharge.api.Repositories.SQL
                 else if (filterOn.Equals("zipCode", StringComparison.OrdinalIgnoreCase))
                 {
                     locations = locations.Where(x => x.zipCode.Contains(filterQuery));
+                }
+            }
+
+            // Sorting
+            if (string.IsNullOrWhiteSpace(sortBy) == false)
+            {
+                if (sortBy.Equals("Country", StringComparison.OrdinalIgnoreCase))
+                {
+                    locations = isAscending ? locations.OrderBy(x => x.Country) : locations.OrderByDescending(x => x.Country);
+                }
+                else if (sortBy.Equals("State", StringComparison.OrdinalIgnoreCase))
+                {
+                    locations = isAscending ? locations.OrderBy(x => x.State) : locations.OrderByDescending(x => x.State);
+                }
+                else if (sortBy.Equals("zipCode", StringComparison.OrdinalIgnoreCase))
+                {
+                    locations = isAscending ? locations.OrderBy(x => x.zipCode) : locations.OrderByDescending(x => x.zipCode);
                 }
             }
 

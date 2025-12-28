@@ -27,12 +27,12 @@ namespace secondcharge.api.Controllers
         }
 
         // GET ALL CARS
-        // GET: https://localhost:portnumber/api/cars?filterOn=Make
+        // GET: https://localhost:portnumber/api/cars?filterOn=Make&sortBy=Name&isAscending=true
         [HttpGet]
-        public async Task<IActionResult> GetAllCars([FromQuery] string? filterOn, [FromQuery] string? filterQuery)
+        public async Task<IActionResult> GetAllCars([FromQuery] string? filterOn, [FromQuery] string? filterQuery, [FromQuery] string? sortBy, [FromQuery] bool? isAscending)
         {
             // Get Data from database - Domain models
-            var carsDomain = await carRepository.GetAllCarsAsync(filterOn, filterQuery);
+            var carsDomain = await carRepository.GetAllCarsAsync(filterOn, filterQuery, sortBy, isAscending ?? true);
 
             // Map domain to DTO & return DTOs
             return Ok(mapper.Map<List<CarDto>>(carsDomain));

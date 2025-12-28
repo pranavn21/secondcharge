@@ -34,7 +34,8 @@ namespace secondcharge.api.Repositories.SQL
             return existingVehicleListing;
         }
 
-        public async Task<List<VehicleListing>> GetAllVehicleListingsAsync(string? filterOn = null, string? filterQuery = null)
+        public async Task<List<VehicleListing>> GetAllVehicleListingsAsync(string? filterOn = null, string? filterQuery = null, 
+            string? sortBy = null, bool isAscending = true)
         {
             var vehicleListings = dbContext.VehicleListings.AsQueryable();
 
@@ -52,6 +53,19 @@ namespace secondcharge.api.Repositories.SQL
                     {
                         vehicleListings = vehicleListings.Where(x => x.Price <= priceValue);
                     }
+                }
+            }
+
+            // Sorting
+            if (string.IsNullOrWhiteSpace(sortBy) == false)
+            {
+                if (sortBy.Equals("Color", StringComparison.OrdinalIgnoreCase))
+                {
+                    vehicleListings = isAscending ? vehicleListings.OrderBy(x => x.Color) : vehicleListings.OrderByDescending(x => x.Color);
+                }
+                else if (sortBy.Equals("Price", StringComparison.OrdinalIgnoreCase))
+                {
+                    vehicleListings = isAscending ? vehicleListings.OrderBy(x => x.Price) : vehicleListings.OrderByDescending(x => x.Price);
                 }
             }
 

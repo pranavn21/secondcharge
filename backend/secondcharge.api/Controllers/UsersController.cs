@@ -25,12 +25,12 @@ namespace secondcharge.api.Controllers
         }
 
         // GET ALL USERS
-        // GET: https://localhost:portnumber/api/users?filterOn=UserRole&filterQuery=Admin
+        // GET: https://localhost:portnumber/api/users?filterOn=UserRole&filterQuery=Admin&sortBy=UserName&isAscending=true
         [HttpGet]
-        public async Task<IActionResult> GetAllUsers([FromQuery] string? filterOn, [FromQuery] string? filterQuery)
+        public async Task<IActionResult> GetAllUsers([FromQuery] string? filterOn, [FromQuery] string? filterQuery, [FromQuery] string? sortBy, [FromQuery] bool? isAscending)
         {
             // Get Data from database - Domain models
-            var usersDomain = await userRepository.GetAllUsersAsync(filterOn, filterQuery);
+            var usersDomain = await userRepository.GetAllUsersAsync(filterOn, filterQuery, sortBy, isAscending ?? true);
 
             // Map domain to DTO & return DTOs
             return Ok(mapper.Map<List<UserDto>>(usersDomain));

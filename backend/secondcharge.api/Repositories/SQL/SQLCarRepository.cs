@@ -35,7 +35,8 @@ namespace secondcharge.api.Repositories.SQL
             return existingCar;
         }
 
-        public async Task<List<Car>> GetAllCarsAsync(string? filterOn = null, string? filterQuery = null)
+        public async Task<List<Car>> GetAllCarsAsync(string? filterOn = null, string? filterQuery = null,
+            string? sortBy = null, bool isAscending = true)
         {
             var cars = dbContext.Cars.AsQueryable();
 
@@ -48,6 +49,23 @@ namespace secondcharge.api.Repositories.SQL
                 else if (filterOn.Equals("Model", StringComparison.OrdinalIgnoreCase))
                 {
                     cars = cars.Where(x => x.Model.Contains(filterQuery));
+                }
+            }
+
+            // Sorting
+            if (string.IsNullOrWhiteSpace(sortBy) == false)
+            {
+                if (sortBy.Equals("Make", StringComparison.OrdinalIgnoreCase))
+                {
+                    cars = isAscending ? cars.OrderBy(x => x.Make) : cars.OrderByDescending(x => x.Make);
+                }
+                else if (sortBy.Equals("Model", StringComparison.OrdinalIgnoreCase))
+                {
+                    cars = isAscending ? cars.OrderBy(x => x.Model) : cars.OrderByDescending(x => x.Model);
+                }
+                else if (sortBy.Equals("Efficiency", StringComparison.OrdinalIgnoreCase))
+                {
+                    cars = isAscending ? cars.OrderBy(x => x.Efficiency) : cars.OrderByDescending(x => x.Efficiency);
                 }
             }
 
