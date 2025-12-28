@@ -34,9 +34,41 @@ namespace secondcharge.api.Repositories.SQL
             return existingUser;
         }
 
-        public async Task<List<User>> GetAllUsersAsync()
+        public async Task<List<User>> GetAllUsersAsync(string? filterOn = null, string? filterQuery = null, 
+            string? sortBy = null, bool isAscending = true, int pageNumber = 1, int pageSize = 1000)
         {
-            return await dbContext.Users.Include("Location").ToListAsync();
+            var users = dbContext.Users.Include(x => x.Location).AsQueryable();
+
+            // Filtering
+            if (string.IsNullOrWhiteSpace(filterOn) == false && string.IsNullOrWhiteSpace(filterQuery) == false)
+            {
+                if (filterOn.Equals("UserName", StringComparison.OrdinalIgnoreCase))
+                {
+                    users = users.Where(x => x.UserName.Contains(filterQuery));
+                }
+                else if (filterOn.Equals("UserRole", StringComparison.OrdinalIgnoreCase))
+                {
+                    users = users.Where(x => x.UserRole.Contains(filterQuery));
+                }
+            }
+
+            // Sorting
+            if (string.IsNullOrWhiteSpace(sortBy) == false)
+            {
+                if (sortBy.Equals("UserName", StringComparison.OrdinalIgnoreCase))
+                {
+                    users = isAscending ? users.OrderBy(x => x.UserName) : users.OrderByDescending(x => x.UserName);
+                }
+                else if (sortBy.Equals("UserRole", StringComparison.OrdinalIgnoreCase))
+                {
+                    users = isAscending ? users.OrderBy(x => x.UserRole) : users.OrderByDescending(x => x.UserRole);
+                }
+            }
+
+            // Pagination
+            users = users.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+
+            return await users.ToListAsync();
         }
 
         public async Task<User?> GetUserByIdAsync(Guid id)

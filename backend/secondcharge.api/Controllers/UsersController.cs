@@ -1,9 +1,9 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using secondcharge.api.CustomActionFilters;
 using secondcharge.api.Data;
 using secondcharge.api.Models.Domain;
-using secondcharge.api.Models.DTO;
+using secondcharge.api.Models.DTO.User;
 using secondcharge.api.Repositories.Interfaces;
 
 namespace secondcharge.api.Controllers
@@ -25,12 +25,15 @@ namespace secondcharge.api.Controllers
         }
 
         // GET ALL USERS
-        // GET: https://localhost:portnumber/api/users
+        // GET: https://localhost:portnumber/api/users?filterOn=UserRole&filterQuery=Admin&sortBy=UserName&isAscending=true&pageNumber=1&pageSize=10
         [HttpGet]
-        public async Task<IActionResult> GetAllUsers()
+        public async Task<IActionResult> GetAllUsers([FromQuery] string? filterOn, [FromQuery] string? filterQuery, 
+            [FromQuery] string? sortBy, [FromQuery] bool? isAscending,
+            [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 1000)
         {
             // Get Data from database - Domain models
-            var usersDomain = await userRepository.GetAllUsersAsync();
+            var usersDomain = await userRepository.GetAllUsersAsync(filterOn, filterQuery, 
+                sortBy, isAscending ?? true, pageNumber, pageSize);
 
             // Map domain to DTO & return DTOs
             return Ok(mapper.Map<List<UserDto>>(usersDomain));
@@ -56,6 +59,7 @@ namespace secondcharge.api.Controllers
         // POST To Create New User
         // POST: https://localhost:portnumber/api/users
         [HttpPost]
+        [ValidateModel]
         public async Task<IActionResult> Create([FromBody] AddUserRequestDto addUserRequestDto)
         {
             // Map DTO to Domain Model
@@ -76,6 +80,7 @@ namespace secondcharge.api.Controllers
         // PUT: https://localhost:portnumber/api/users/{id}
         [HttpPut]
         [Route("{id:Guid}")]
+        [ValidateModel]
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateUserRequestDto updateUserRequestDto)
         {
             // Map DTO to Domain Model
