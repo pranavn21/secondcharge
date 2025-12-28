@@ -5,6 +5,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterOutlet } from '@angular/router';
+import { ToolbarComponent } from "../shared/toolbar/toolbar.component";
 
 @Component({
   selector: 'app-vehicle-list',
@@ -13,8 +14,9 @@ import { RouterOutlet } from '@angular/router';
     MatCardModule,
     MatButtonModule,
     RouterLink,
-    RouterLinkActive
-  ],
+    RouterLinkActive,
+    ToolbarComponent
+],
   templateUrl: './vehicle-list.component.html',
   styleUrls: ['./vehicle-list.component.css'],
   standalone: true

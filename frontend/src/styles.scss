@@ -1,0 +1,56 @@
+/* You can add global styles to this file, and also import other style files */
+/* @import "@angular/material/prebuilt-themes/azure-blue.css"; */
+@use '@angular/material' as mat;
+
+@include mat.core();
+
+// Define your custom purple theme using Material 3
+$my-theme: mat.define-theme((
+  color: (
+    theme-type: light,
+    primary: mat.$violet-palette,
+    tertiary: mat.$violet-palette,
+  ),
+  typography: (
+    brand-family: 'Roboto, "Helvetica Neue", sans-serif',
+    plain-family: 'Roboto, "Helvetica Neue", sans-serif',
+  ),
+  density: (
+    scale: 0,
+  )
+));
+
+html {
+    @include mat.all-component-themes($my-theme);
+}
+
+html, body { height: 100%; }
+body { 
+    margin: 0; 
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    background-color: rgb(244, 244, 244); 
+}
+
+.container {
+    padding: 50px;
+    max-width: 1200px;
+    margin: auto;
+}
+
+.container-sm {
+    padding: 50px;
+    max-width: 800px;
+    margin: auto;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-left {
+    text-align: left;
+}
