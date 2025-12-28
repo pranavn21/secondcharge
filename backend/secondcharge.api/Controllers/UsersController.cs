@@ -1,5 +1,6 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using secondcharge.api.CustomActionFilters;
 using secondcharge.api.Data;
 using secondcharge.api.Models.Domain;
 using secondcharge.api.Models.DTO.User;
@@ -58,6 +59,7 @@ namespace secondcharge.api.Controllers
         // POST To Create New User
         // POST: https://localhost:portnumber/api/users
         [HttpPost]
+        [ValidateModel]
         public async Task<IActionResult> Create([FromBody] AddUserRequestDto addUserRequestDto)
         {
             // Map DTO to Domain Model
@@ -78,6 +80,7 @@ namespace secondcharge.api.Controllers
         // PUT: https://localhost:portnumber/api/users/{id}
         [HttpPut]
         [Route("{id:Guid}")]
+        [ValidateModel]
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateUserRequestDto updateUserRequestDto)
         {
             // Map DTO to Domain Model
