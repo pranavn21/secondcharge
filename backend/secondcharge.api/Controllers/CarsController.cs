@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using secondcharge.api.CustomActionFilters;
 using secondcharge.api.Data;
@@ -11,6 +12,7 @@ namespace secondcharge.api.Controllers
     // https://localhost:portnumber/Cars
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class CarsController : ControllerBase
     {
         private readonly SecondChargeDbContext dbContext;

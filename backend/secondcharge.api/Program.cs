@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using secondcharge.api.Data;
@@ -18,15 +19,37 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<SecondChargeDbContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("SecondChargeConnectionString")));
 
+builder.Services.AddDbContext<SecondChargeAuthDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("SecondChargeAuthConnectionString")));
+
 builder.Services.AddScoped<ICarRepository, SQLCarRepository>();
 builder.Services.AddScoped<IUserRepository, SQLUserRepository>();
 builder.Services.AddScoped<ILocationRepository, SQLLocationRepository>();
 builder.Services.AddScoped<IVehicleListingRepository, SQLVehicleListingRepository>();
+builder.Services.AddScoped<ITokenRepository, SQLTokenRepository>();
 
 builder.Services.AddAutoMapper(cfg =>
 {
     cfg.AddProfile(new AutoMapperProfiles());
 });
+
+builder.Services.AddIdentityCore<IdentityUser>()
+    .AddRoles<IdentityRole>()
+    .AddTokenProvider<DataProtectorTokenProvider<IdentityUser>>("SecondCharge")
+    .AddEntityFrameworkStores<SecondChargeAuthDbContext>()
+    .AddDefaultTokenProviders();
+
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    options.Password.RequireDigit = false;
+    options.Password.RequireLowercase = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequiredLength = 6;
+    options.Password.RequiredUniqueChars = 1;
+    //options.User.RequireUniqueEmail = true;
+});
+
 
 // Add CORS policy
 builder.Services.AddCors(options =>

@@ -5,7 +5,7 @@ namespace secondcharge.api.Data
 {
     public class SecondChargeDbContext: DbContext
     {
-        public SecondChargeDbContext(DbContextOptions dbContextOptions) : base(dbContextOptions) 
+        public SecondChargeDbContext(DbContextOptions<SecondChargeDbContext> dbContextOptions) : base(dbContextOptions) 
         { 
         
         }
