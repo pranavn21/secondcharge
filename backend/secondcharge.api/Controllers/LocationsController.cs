@@ -1,10 +1,9 @@
 using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using secondcharge.api.CustomActionFilters;
+using Microsoft.EntityFrameworkCore;
 using secondcharge.api.Data;
 using secondcharge.api.Models.Domain;
-using secondcharge.api.Models.DTO.Location;
+using secondcharge.api.Models.DTO;
 using secondcharge.api.Repositories.Interfaces;
 
 namespace secondcharge.api.Controllers
@@ -12,7 +11,6 @@ namespace secondcharge.api.Controllers
     // https://localhost:portnumber/Locations
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class LocationsController : ControllerBase
     {
         private readonly SecondChargeDbContext dbContext;
@@ -27,16 +25,12 @@ namespace secondcharge.api.Controllers
         }
 
         // GET ALL LOCATIONS
-        // GET: https://localhost:portnumber/api/locations?filterOn=Country&filterQuery=USA&sortBy=State&isAscending=true&pageNumber=1&pageSize=10
+        // GET: https://localhost:portnumber/api/locations
         [HttpGet]
-        [Authorize(Roles = "Reader")]
-        public async Task<IActionResult> GetAllLocations([FromQuery] string? filterOn, [FromQuery] string? filterQuery, 
-            [FromQuery] string? sortBy, [FromQuery] bool? isAscending,
-            [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 1000)
+        public async Task<IActionResult> GetAllLocations()
         {
             // Get Data from database - Domain models
-            var locationsDomain = await locationRepository.GetAllLocationsAsync(filterOn, filterQuery, 
-                sortBy, isAscending ?? true, pageNumber, pageSize);
+            var locationsDomain = await locationRepository.GetAllLocationsAsync();
 
             // Map domain to DTO & return DTOs
             return Ok(mapper.Map<List<LocationDto>>(locationsDomain));
@@ -46,7 +40,6 @@ namespace secondcharge.api.Controllers
         // GET: https://localhost:portnumber/api/locations/{id}
         [HttpGet]
         [Route("{id:Guid}")]
-        [Authorize(Roles = "Reader")]
         public async Task<IActionResult> GetLocationById(Guid id)
         {
             // Get Location Domain Model from DB
@@ -63,8 +56,6 @@ namespace secondcharge.api.Controllers
         // POST To Create New Location
         // POST: https://localhost:portnumber/api/locations
         [HttpPost]
-        [ValidateModel]
-        [Authorize(Roles = "Writer")]
         public async Task<IActionResult> Create([FromBody] AddLocationRequestDto addLocationRequestDto)
         {
             // Map DTO to Domain Model
@@ -85,8 +76,6 @@ namespace secondcharge.api.Controllers
         // PUT: https://localhost:portnumber/api/locations/{id}
         [HttpPut]
         [Route("{id:Guid}")]
-        [ValidateModel]
-        [Authorize(Roles = "Writer")]
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateLocationRequestDto updateLocationRequestDto)
         {
             // Map DTO to Domain Model
@@ -107,7 +96,6 @@ namespace secondcharge.api.Controllers
         // DELETE: https://localhost:portnumber/api/locations/{id}
         [HttpDelete]
         [Route("{id:Guid}")]
-        [Authorize(Roles = "Writer")]
         public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
             var locationDomainModel = await locationRepository.DeleteAsync(id);

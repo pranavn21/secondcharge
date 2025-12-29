@@ -35,44 +35,9 @@ namespace secondcharge.api.Repositories.SQL
             return existingCar;
         }
 
-        public async Task<List<Car>> GetAllCarsAsync(string? filterOn = null, string? filterQuery = null,
-            string? sortBy = null, bool isAscending = true, int pageNumber = 1, int pageSize = 1000)
+        public async Task<List<Car>> GetAllCarsAsync()
         {
-            var cars = dbContext.Cars.AsQueryable();
-
-            // Filtering
-            if (string.IsNullOrWhiteSpace(filterOn) == false && string.IsNullOrWhiteSpace(filterQuery) == false) { 
-                if (filterOn.Equals("Make", StringComparison.OrdinalIgnoreCase))
-                {
-                    cars = cars.Where(x => x.Make.Contains(filterQuery));
-                }
-                else if (filterOn.Equals("Model", StringComparison.OrdinalIgnoreCase))
-                {
-                    cars = cars.Where(x => x.Model.Contains(filterQuery));
-                }
-            }
-
-            // Sorting
-            if (string.IsNullOrWhiteSpace(sortBy) == false)
-            {
-                if (sortBy.Equals("Make", StringComparison.OrdinalIgnoreCase))
-                {
-                    cars = isAscending ? cars.OrderBy(x => x.Make) : cars.OrderByDescending(x => x.Make);
-                }
-                else if (sortBy.Equals("Model", StringComparison.OrdinalIgnoreCase))
-                {
-                    cars = isAscending ? cars.OrderBy(x => x.Model) : cars.OrderByDescending(x => x.Model);
-                }
-                else if (sortBy.Equals("Efficiency", StringComparison.OrdinalIgnoreCase))
-                {
-                    cars = isAscending ? cars.OrderBy(x => x.Efficiency) : cars.OrderByDescending(x => x.Efficiency);
-                }
-            }
-
-            // Pagination
-            cars = cars.Skip((pageNumber - 1) * pageSize).Take(pageSize);
-
-            return await cars.ToListAsync();
+            return await dbContext.Cars.ToListAsync();
         }
 
         public async Task<Car?> GetCarByIdAsync(Guid id)

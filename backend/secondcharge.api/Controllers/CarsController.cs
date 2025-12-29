@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using secondcharge.api.CustomActionFilters;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using secondcharge.api.Data;
 using secondcharge.api.Models.Domain;
-using secondcharge.api.Models.DTO.Car;
+using secondcharge.api.Models.DTO;
 using secondcharge.api.Repositories.Interfaces;
 
 namespace secondcharge.api.Controllers
@@ -12,7 +12,6 @@ namespace secondcharge.api.Controllers
     // https://localhost:portnumber/Cars
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class CarsController : ControllerBase
     {
         private readonly SecondChargeDbContext dbContext;
@@ -27,16 +26,12 @@ namespace secondcharge.api.Controllers
         }
 
         // GET ALL CARS
-        // GET: https://localhost:portnumber/api/cars?filterOn=Make&sortBy=Name&isAscending=true&pageNumber=1&pageSize=10
+        // GET: https://localhost:portnumber/api/cars
         [HttpGet]
-        [Authorize(Roles = "Reader")]
-        public async Task<IActionResult> GetAllCars([FromQuery] string? filterOn, [FromQuery] string? filterQuery, 
-            [FromQuery] string? sortBy, [FromQuery] bool? isAscending,
-            [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 1000)
+        public async Task<IActionResult> GetAllCars()
         {
             // Get Data from database - Domain models
-            var carsDomain = await carRepository.GetAllCarsAsync(filterOn, filterQuery, sortBy, 
-                isAscending ?? true, pageNumber, pageSize);
+            var carsDomain = await carRepository.GetAllCarsAsync();
 
             // Map domain to DTO & return DTOs
             return Ok(mapper.Map<List<CarDto>>(carsDomain));
@@ -45,7 +40,6 @@ namespace secondcharge.api.Controllers
         // GET A CAR BY ID
         // GET: https://localhost:portnumber/api/cars/{id}
         [HttpGet]
-        [Authorize(Roles = "Reader")]
         [Route("{id:Guid}")]
         public async Task<IActionResult> GetCarById(Guid id)
         {
@@ -64,8 +58,6 @@ namespace secondcharge.api.Controllers
         // POST To Create New Car
         // POST: https://localhost:portnumber/api/cars
         [HttpPost]
-        [ValidateModel]
-        [Authorize(Roles = "Writer")]
         public async Task<IActionResult> Create([FromBody] AddCarRequestDto addCarRequestDto)
         {
             // Map DTO to Domain Model
@@ -86,8 +78,6 @@ namespace secondcharge.api.Controllers
         // PUT: https://localhost:portnumber/api/cars
         [HttpPut]
         [Route("{id:Guid}")]
-        [ValidateModel]
-        [Authorize(Roles = "Writer")]
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateCarRequestDto updateCarRequestDto)
         {
             // Map DTO to Domain Model
@@ -108,7 +98,6 @@ namespace secondcharge.api.Controllers
         // DELETE: https://localhost:portnumber/api/cars/{id}
         [HttpDelete]
         [Route("{id:Guid}")]
-        [Authorize]
         public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
             var carDomainModel = await carRepository.DeleteAsync(id);
