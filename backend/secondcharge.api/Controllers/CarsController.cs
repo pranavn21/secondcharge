@@ -29,6 +29,7 @@ namespace secondcharge.api.Controllers
         // GET ALL CARS
         // GET: https://localhost:portnumber/api/cars?filterOn=Make&sortBy=Name&isAscending=true&pageNumber=1&pageSize=10
         [HttpGet]
+        [Authorize(Roles = "Reader")]
         public async Task<IActionResult> GetAllCars([FromQuery] string? filterOn, [FromQuery] string? filterQuery, 
             [FromQuery] string? sortBy, [FromQuery] bool? isAscending,
             [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 1000)
@@ -44,6 +45,7 @@ namespace secondcharge.api.Controllers
         // GET A CAR BY ID
         // GET: https://localhost:portnumber/api/cars/{id}
         [HttpGet]
+        [Authorize(Roles = "Reader")]
         [Route("{id:Guid}")]
         public async Task<IActionResult> GetCarById(Guid id)
         {
@@ -63,6 +65,7 @@ namespace secondcharge.api.Controllers
         // POST: https://localhost:portnumber/api/cars
         [HttpPost]
         [ValidateModel]
+        [Authorize(Roles = "Writer")]
         public async Task<IActionResult> Create([FromBody] AddCarRequestDto addCarRequestDto)
         {
             // Map DTO to Domain Model
@@ -84,6 +87,7 @@ namespace secondcharge.api.Controllers
         [HttpPut]
         [Route("{id:Guid}")]
         [ValidateModel]
+        [Authorize(Roles = "Writer")]
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateCarRequestDto updateCarRequestDto)
         {
             // Map DTO to Domain Model
@@ -104,6 +108,7 @@ namespace secondcharge.api.Controllers
         // DELETE: https://localhost:portnumber/api/cars/{id}
         [HttpDelete]
         [Route("{id:Guid}")]
+        [Authorize]
         public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
             var carDomainModel = await carRepository.DeleteAsync(id);
