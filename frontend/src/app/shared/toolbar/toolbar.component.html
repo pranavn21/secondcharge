@@ -3,8 +3,8 @@
         <h2 class="logo" [routerLink]="['/']">SecondCharge</h2>
         <span class="spacer"></span>
         <div class="button-container">
-            <a [routerLink]="['/vehicles']" mat-button>Vehicles</a>
-            <a [routerLink]="['/user']" mat-button>Sign In</a>
+            <a [routerLink]="['/vehicles']" mat-button>Vehicles</a> <!-- Remove this later since it's redundant-->
+            <button mat-button (click)="openSignInDialog()">Sign In</button>
         </div>
     </mat-toolbar-row>
 </mat-toolbar>
