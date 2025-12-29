@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using secondcharge.api.CustomActionFilters;
 using secondcharge.api.Data;
@@ -10,6 +11,7 @@ namespace secondcharge.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class VehicleListingsController : ControllerBase
     {
         private readonly SecondChargeDbContext dbContext;
@@ -26,6 +28,7 @@ namespace secondcharge.api.Controllers
         // GET ALL VEHICLE LISTINGS
         // GET: https://localhost:portnumber/api/vehiclelistings?filterOn=Color&filterQuery=Blue&sortBy=Price&isAscending=true&pageNumber=1&pageSize=10
         [HttpGet]
+        [Authorize(Roles = "Reader")]
         public async Task<IActionResult> GetAllListings([FromQuery] string? filterOn, [FromQuery] string? filterQuery, 
             [FromQuery] string? sortBy, [FromQuery] bool? isAscending,
             [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 1000)
@@ -42,6 +45,7 @@ namespace secondcharge.api.Controllers
         // GET: https://localhost:portnumber/api/vehiclelistings/{id}
         [HttpGet]
         [Route("{id:Guid}")]
+        [Authorize(Roles = "Reader")]
         public async Task<IActionResult> GetVehicleListingById(Guid id)
         {
             // Get Vehicle Listing Domain Model from DB
@@ -59,6 +63,7 @@ namespace secondcharge.api.Controllers
         // POST: https://localhost:portnumber/api/vehiclelistings
         [HttpPost]
         [ValidateModel]
+        [Authorize(Roles = "Writer")]
         public async Task<IActionResult> Create([FromBody] AddVehicleListingRequestDto addVehicleListingRequestDto)
         {
             // Map DTO to Domain Model
@@ -80,6 +85,7 @@ namespace secondcharge.api.Controllers
         [HttpPut]
         [Route("{id:Guid}")]
         [ValidateModel]
+        [Authorize(Roles = "Writer")]
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateVehicleListingRequestDto updateVehicleListingRequestDto)
         {
             // Map DTO to Domain Model
@@ -100,6 +106,7 @@ namespace secondcharge.api.Controllers
         // DELETE: https://localhost:portnumber/api/vehiclelistings/{id}
         [HttpDelete]
         [Route("{id:Guid}")]
+        [Authorize(Roles = "Writer")]
         public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
             var vehicleListingDomainModel = await vehicleListingRepository.DeleteAsync(id);
