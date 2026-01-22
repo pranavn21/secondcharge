@@ -4,12 +4,12 @@
 
 @include mat.core();
 
-// Define your custom purple theme using Material 3
+// Define your custom blue & green theme using Material 3
 $my-theme: mat.define-theme((
   color: (
     theme-type: light,
-    primary: mat.$violet-palette,
-    tertiary: mat.$violet-palette,
+    primary: mat.$blue-palette,
+    tertiary: mat.$green-palette,
   ),
   typography: (
     brand-family: 'Roboto, "Helvetica Neue", sans-serif',

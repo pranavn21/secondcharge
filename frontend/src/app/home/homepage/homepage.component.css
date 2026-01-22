@@ -103,11 +103,21 @@ mat-chip-option {
 }
 /*--*/
 
+/* Styling for search box */
+.search-box-container {
+    padding: 24px 16px 8px 16px;
+}
+
+.search-box {
+    width: 100%;
+    max-width: 600px;
+}
+
 /* Styling for mat-tab and its option buttons */
 .select-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-    gap: 0px;
+    gap: 20px;
     padding: 16px;
 }
 
@@ -120,6 +130,16 @@ mat-chip-option {
 .select-container mat-form-field {
     width: 100%;
     margin: 0px;
+}
+
+/* Custom styling for Show Matches button */
+.show-matches-btn {
+    background-color: #1976d2 !important;
+    color: white !important;
+}
+
+.show-matches-btn:hover {
+    background-color: #1565c0 !important;
 }
 
 /* Styling for Sell your Vehicle tab content */
