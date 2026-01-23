@@ -1,0 +1,63 @@
+<app-toolbar></app-toolbar>
+
+<div class="container">
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p>Loading vehicles...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !loading" class="error-container">
+    <mat-icon color="warn">error_outline</mat-icon>
+    <p>{{ error }}</p>
+    <button mat-raised-button color="primary" (click)="loadListings()">Retry</button>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && !error && listings.length === 0" class="empty-container">
+    <mat-icon>inventory_2</mat-icon>
+    <p>No vehicles available at the moment.</p>
+  </div>
+
+  <!-- Vehicle Listings -->
+  <mat-card *ngFor="let listing of listings" class="vehicle-card">
+    <!-- Left Section: Vehicle Image -->
+    <div class="vehicle-left">
+      <img [src]="getImageUrl(listing)" [alt]="getVehicleTitle(listing)" class="vehicle-image" />
+    </div>
+
+    <!-- Right Section: Vehicle Details -->
+    <div class="vehicle-right">
+      <!-- Price -->
+      <div class="vehicle-price">{{ formatPrice(listing.price) }}</div>
+
+      <!-- Title -->
+      <div class="vehicle-title">{{ getVehicleTitle(listing) }}</div>
+
+      <!-- Color -->
+      <div class="vehicle-color">
+        <mat-icon>palette</mat-icon>
+        <span>{{ listing.color }}</span>
+      </div>
+
+      <!-- Mileage -->
+      <div class="vehicle-mileage">
+        <mat-icon>speed</mat-icon>
+        <span>{{ formatMileage(listing.mileage) }}</span>
+      </div>
+
+      <!-- Efficiency (if available) -->
+      <div *ngIf="listing.carModel?.efficiency" class="vehicle-efficiency">
+        <mat-icon>electric_bolt</mat-icon>
+        <span>{{ listing.carModel?.efficiency }} MPGe</span>
+      </div>
+
+      <!-- Action Badge -->
+      <div class="vehicle-action">
+        <button mat-raised-button color="primary">View Details</button>
+      </div>
+    </div>
+  </mat-card>
+</div>
+

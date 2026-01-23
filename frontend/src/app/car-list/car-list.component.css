@@ -1,0 +1,167 @@
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.vehicle-card {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto 24px auto;
+  padding: 20px;
+  border-radius: 12px;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.vehicle-card:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  transform: translateY(-2px);
+}
+
+/* Loading State */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.loading-container p {
+  margin-top: 16px;
+  color: #666;
+  font-size: 16px;
+}
+
+/* Error State */
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.error-container mat-icon {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+}
+
+.error-container p {
+  margin: 16px 0;
+  color: #666;
+  font-size: 16px;
+}
+
+/* Empty State */
+.empty-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.empty-container mat-icon {
+  font-size: 64px;
+  width: 64px;
+  height: 64px;
+  color: #ccc;
+}
+
+.empty-container p {
+  margin-top: 16px;
+  color: #666;
+  font-size: 16px;
+}
+  
+  /* Left section: 30% width for the vehicle image */
+  .vehicle-left {
+    width: 30%;
+    margin-right: 16px;
+  }
+  
+  .vehicle-image {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+  
+  /* Right section: 70% width for the text and button */
+  .vehicle-right {
+    display: flex;
+    flex-direction: column;
+    flex: 1; /* Fill remaining space */
+    justify-content: flex-start;
+  }
+  
+  /* Price, Title, Mileage, etc. */
+  .vehicle-price {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #2e7d32; /* Example color for price */
+  }
+  
+  .vehicle-title {
+    font-size: 1.2rem;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: #333;
+  }
+  
+  .vehicle-mileage,
+  .vehicle-color,
+  .vehicle-efficiency {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: #666;
+  }
+  
+  .vehicle-mileage mat-icon,
+  .vehicle-color mat-icon,
+  .vehicle-efficiency mat-icon {
+    margin-right: 6px;
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    color: #888;
+  }
+  
+  /* Button at the bottom right */
+  .vehicle-action {
+    margin-top: auto;
+    padding-top: 16px;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .vehicle-action button {
+    transition: all 0.2s ease;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .vehicle-card {
+      flex-direction: column;
+    }
+
+    .vehicle-left {
+      width: 100%;
+      margin-right: 0;
+      margin-bottom: 16px;
+    }
+  }
+
