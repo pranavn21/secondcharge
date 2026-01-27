@@ -1,0 +1,219 @@
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.vehicle-card {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto 24px auto;
+  padding: 20px;
+  border-radius: 12px;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.vehicle-card:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  transform: translateY(-2px);
+}
+
+/* Super Deal Badge */
+.super-deal-badge {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background-color: #4CAF50;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 14px;
+  z-index: 10;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* Loading State */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.loading-container p {
+  margin-top: 16px;
+  color: #666;
+  font-size: 16px;
+}
+
+/* Error State */
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.error-container mat-icon {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+}
+
+.error-container p {
+  margin: 16px 0;
+  color: #666;
+  font-size: 16px;
+}
+
+/* Empty State */
+.empty-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.empty-container mat-icon {
+  font-size: 64px;
+  width: 64px;
+  height: 64px;
+  color: #ccc;
+}
+
+.empty-container p {
+  margin-top: 16px;
+  color: #666;
+  font-size: 16px;
+}
+  
+  /* Left section: 45% width for the vehicle image */
+  .vehicle-left {
+    width: 45%;
+    margin-right: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-radius: 12px;
+  }
+  
+  .vehicle-image {
+    width: 100%;
+    height: 240px;
+    object-fit: cover;
+    border-radius: 12px !important;
+    display: block;
+  }
+  
+  /* Right section: 55% width for the text and button */
+  .vehicle-right {
+    display: flex;
+    flex-direction: column;
+    flex: 1; /* Fill remaining space */
+    justify-content: flex-start;
+  }
+  
+  /* Price, Title, Mileage, etc. */
+  .vehicle-price {
+    font-size: 1.75rem;
+    font-weight: bold;
+    margin-bottom: 4px;
+    color: #4CAF50;
+  }
+  
+  .vehicle-title {
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: #5858E0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* Details Group */
+  .vehicle-details-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: auto;
+  }
+  
+  .vehicle-mileage,
+  .vehicle-efficiency {
+    display: flex;
+    align-items: center;
+    font-size: 15px;
+    color: #666;
+  }
+  
+  .vehicle-mileage mat-icon,
+  .vehicle-efficiency mat-icon {
+    margin-right: 8px;
+    font-size: 22px;
+    width: 22px;
+    height: 22px;
+    color: #888;
+  }
+
+  /* Location Section - Positioned at bottom */
+  .vehicle-location-section {
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid #e0e0e0;
+  }
+
+  .vehicle-location {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+  }
+  
+  .vehicle-location mat-icon {
+    margin-right: 8px;
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+    color: #4CAF50;
+  }
+  
+  /* Button at the bottom right */
+  .vehicle-action {
+    margin-top: auto;
+    padding-top: 16px;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .vehicle-action button {
+    transition: all 0.2s ease;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .vehicle-card {
+      flex-direction: column;
+    }
+
+    .vehicle-left {
+      width: 100%;
+      margin-right: 0;
+      margin-bottom: 16px;
+    }
+  }
+
