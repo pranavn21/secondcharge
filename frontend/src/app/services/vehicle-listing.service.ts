@@ -1,16 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, of, delay } from 'rxjs';
+import { Observable } from 'rxjs';
 import { VehicleListing, AddVehicleListingRequest, UpdateVehicleListingRequest } from '../models/vehicle-listing.model';
 import { environment } from '../environments/environment.development';
-import { MOCK_VEHICLE_LISTINGS } from '../mocks/mock-data';
 
 @Injectable({
   providedIn: 'root'
 })
 export class VehicleListingService {
   private apiUrl = `${environment.apiBaseUrl}/api/vehiclelistings`;
-  private useMockData = true; // Toggle this to switch between mock and real API
 
   constructor(private http: HttpClient) { }
 
@@ -23,12 +21,6 @@ export class VehicleListingService {
     pageNumber: number = 1,
     pageSize: number = 1000
   ): Observable<VehicleListing[]> {
-    // Return mock data if enabled
-    if (this.useMockData) {
-      return of(MOCK_VEHICLE_LISTINGS).pipe(delay(500)); // Simulate network delay
-    }
-
-    // Real API call
     let params = new HttpParams()
       .set('pageNumber', pageNumber.toString())
       .set('pageSize', pageSize.toString());

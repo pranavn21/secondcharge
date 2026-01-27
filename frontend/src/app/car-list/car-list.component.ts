@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -17,8 +17,6 @@ import { VehicleListing } from '../models/vehicle-listing.model';
     MatCardModule,
     MatButtonModule,
     MatProgressSpinnerModule,
-    RouterLink,
-    RouterLinkActive,
     ToolbarComponent,
   ],
   templateUrl: './car-list.component.html',
@@ -27,13 +25,31 @@ import { VehicleListing } from '../models/vehicle-listing.model';
 })
 export class CarListComponent implements OnInit {
   listings: VehicleListing[] = [];
+  filteredListings: VehicleListing[] = [];
   loading = false;
   error: string | null = null;
+  
+  // Filter parameters
+  searchQuery: string = '';
+  makeFilter: string = '';
+  modelFilter: string = '';
+  priceRangeFilter: string = '';
 
-  constructor(private vehicleListingService: VehicleListingService) {}
+  constructor(
+    private vehicleListingService: VehicleListingService,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
-    this.loadListings();
+    // Subscribe to query parameters
+    this.route.queryParams.subscribe(params => {
+      this.searchQuery = params['search'] || '';
+      this.makeFilter = params['make'] || '';
+      this.modelFilter = params['model'] || '';
+      this.priceRangeFilter = params['priceRange'] || '';
+      
+      this.loadListings();
+    });
   }
 
   loadListings(): void {
@@ -43,6 +59,7 @@ export class CarListComponent implements OnInit {
     this.vehicleListingService.getAllListings().subscribe({
       next: (data) => {
         this.listings = data;
+        this.applyFilters();
         this.loading = false;
       },
       error: (err) => {
@@ -51,6 +68,45 @@ export class CarListComponent implements OnInit {
         this.loading = false;
       }
     });
+  }
+
+  applyFilters(): void {
+    let filtered = [...this.listings];
+
+    // Apply search query filter (searches in make, model, and color)
+    if (this.searchQuery) {
+      const query = this.searchQuery.toLowerCase();
+      filtered = filtered.filter(listing => {
+        const make = listing.carModel?.make?.toLowerCase() || '';
+        const model = listing.carModel?.model?.toLowerCase() || '';
+        const color = listing.color?.toLowerCase() || '';
+        return make.includes(query) || model.includes(query) || color.includes(query);
+      });
+    }
+
+    // Apply make filter
+    if (this.makeFilter) {
+      filtered = filtered.filter(listing => 
+        listing.carModel?.make === this.makeFilter
+      );
+    }
+
+    // Apply model filter
+    if (this.modelFilter) {
+      filtered = filtered.filter(listing => 
+        listing.carModel?.model === this.modelFilter
+      );
+    }
+
+    // Apply price range filter
+    if (this.priceRangeFilter) {
+      const [min, max] = this.priceRangeFilter.split('-').map(Number);
+      filtered = filtered.filter(listing => 
+        listing.price >= min && listing.price <= max
+      );
+    }
+
+    this.filteredListings = filtered;
   }
 
   // Format price to currency
@@ -79,6 +135,14 @@ export class CarListComponent implements OnInit {
   getImageUrl(listing: VehicleListing): string {
     return listing.carModel?.modelImageUrl || 'https://via.placeholder.com/400x300?text=No+Image';
   }
-}
 
+  // Format location information
+  formatLocation(listing: VehicleListing): string {
+    if (listing.listingLocation) {
+      const { zipCode, state, country } = listing.listingLocation;
+      return `${zipCode}, ${state}, ${country}`;
+    }
+    return 'Location unavailable';
+  }
+}
 

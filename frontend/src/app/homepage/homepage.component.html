@@ -35,14 +35,15 @@
                     <div class="search-box-container">
                         <mat-form-field appearance="outline" class="search-box">
                             <mat-label>Search vehicles</mat-label>
-                            <input matInput placeholder="e.g., Tesla Model 3, SUV, electric">
+                            <input matInput placeholder="e.g., Tesla Model 3, SUV, electric" [(ngModel)]="searchQuery">
                             <mat-icon matPrefix>search</mat-icon>
                         </mat-form-field>
                     </div>
                     <div class="select-container">
                         <mat-form-field appearance="outline">
                             <mat-label>Condition</mat-label>
-                            <mat-select>
+                            <mat-select [(ngModel)]="selectedCondition">
+                                <mat-option value="">All</mat-option>
                                 <mat-option value="new">New</mat-option>
                                 <mat-option value="used">Used</mat-option>
                                 <mat-option value="certified">Certified Pre-Owned</mat-option>
@@ -51,25 +52,28 @@
                 
                         <mat-form-field appearance="outline">
                             <mat-label>Make</mat-label>
-                            <mat-select>
-                                <mat-option value="tesla">Tesla</mat-option>
-                                <mat-option value="lucid">Lucid</mat-option>
-                                <mat-option value="rivian">Rivian</mat-option>
+                            <mat-select [(ngModel)]="selectedMake">
+                                <mat-option value="">All</mat-option>
+                                <mat-option value="Tesla">Tesla</mat-option>
+                                <mat-option value="Lucid">Lucid</mat-option>
+                                <mat-option value="Rivian">Rivian</mat-option>
                             </mat-select>
                         </mat-form-field>
                 
                         <mat-form-field appearance="outline">
                             <mat-label>Model</mat-label>
-                            <mat-select>
-                                <mat-option value="model3">Model 3</mat-option>
-                                <mat-option value="models">Model S</mat-option>
-                                <mat-option value="modelx">Model X</mat-option>
+                            <mat-select [(ngModel)]="selectedModel">
+                                <mat-option value="">All</mat-option>
+                                <mat-option value="Model 3">Model 3</mat-option>
+                                <mat-option value="Model S">Model S</mat-option>
+                                <mat-option value="Model X">Model X</mat-option>
                             </mat-select>
                         </mat-form-field>
                 
                         <mat-form-field appearance="outline">
                             <mat-label>Distance</mat-label>
-                            <mat-select>
+                            <mat-select [(ngModel)]="distance">
+                                <mat-option value="">Any</mat-option>
                                 <mat-option value="10">10 miles</mat-option>
                                 <mat-option value="25">25 miles</mat-option>
                                 <mat-option value="50">50 miles</mat-option>
@@ -79,23 +83,24 @@
 
                         <mat-form-field appearance="outline">
                             <mat-label>ZIP Code</mat-label>
-                            <input matInput placeholder="Enter ZIP code">
+                            <input matInput placeholder="Enter ZIP code" [(ngModel)]="zipCode">
                         </mat-form-field>
                 
                         <mat-form-field appearance="outline">
                             <mat-label>Price Range</mat-label>
-                            <mat-select>
-                                <mat-option value="25000">Under $25,000</mat-option>
-                                <mat-option value="50000">$25,000 - $50,000</mat-option>
-                                <mat-option value="75000">$50,000 - $75,000</mat-option>
-                                <mat-option value="100000">$75,000 - $100,000</mat-option>
-                                <mat-option value="100001">$100,000+</mat-option>
+                            <mat-select [(ngModel)]="selectedPriceRange">
+                                <mat-option value="">All</mat-option>
+                                <mat-option value="0-25000">Under $25,000</mat-option>
+                                <mat-option value="25000-50000">$25,000 - $50,000</mat-option>
+                                <mat-option value="50000-75000">$50,000 - $75,000</mat-option>
+                                <mat-option value="75000-100000">$75,000 - $100,000</mat-option>
+                                <mat-option value="100000-999999">$100,000+</mat-option>
                             </mat-select>
                         </mat-form-field>
                     </div>
 
                     <div class="button-container">
-                        <button mat-raised-button color="primary" class="show-matches-btn">
+                        <button mat-raised-button color="primary" class="show-matches-btn" (click)="onShowMatches()">
                             Show Matches
                             <mat-icon>search</mat-icon>
                         </button>

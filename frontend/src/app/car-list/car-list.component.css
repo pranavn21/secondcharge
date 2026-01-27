@@ -16,11 +16,27 @@
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   transition: all 0.3s ease;
   cursor: pointer;
+  position: relative;
 }
 
 .vehicle-card:hover {
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
   transform: translateY(-2px);
+}
+
+/* Super Deal Badge */
+.super-deal-badge {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background-color: #4CAF50;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 14px;
+  z-index: 10;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
 /* Loading State */
@@ -84,20 +100,26 @@
   font-size: 16px;
 }
   
-  /* Left section: 30% width for the vehicle image */
+  /* Left section: 45% width for the vehicle image */
   .vehicle-left {
-    width: 30%;
-    margin-right: 16px;
+    width: 45%;
+    margin-right: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-radius: 12px;
   }
   
   .vehicle-image {
     width: 100%;
-    height: auto;
+    height: 240px;
     object-fit: cover;
-    border-radius: 4px;
+    border-radius: 12px !important;
+    display: block;
   }
   
-  /* Right section: 70% width for the text and button */
+  /* Right section: 55% width for the text and button */
   .vehicle-right {
     display: flex;
     flex-direction: column;
@@ -107,37 +129,67 @@
   
   /* Price, Title, Mileage, etc. */
   .vehicle-price {
-    font-size: 1.5rem;
+    font-size: 1.75rem;
     font-weight: bold;
-    margin-bottom: 8px;
-    color: #2e7d32; /* Example color for price */
+    margin-bottom: 4px;
+    color: #4CAF50;
   }
   
   .vehicle-title {
-    font-size: 1.2rem;
-    font-weight: 500;
-    margin-bottom: 8px;
-    color: #333;
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: #5858E0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* Details Group */
+  .vehicle-details-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: auto;
   }
   
   .vehicle-mileage,
-  .vehicle-color,
   .vehicle-efficiency {
     display: flex;
     align-items: center;
-    margin-bottom: 8px;
-    font-size: 14px;
+    font-size: 15px;
     color: #666;
   }
   
   .vehicle-mileage mat-icon,
-  .vehicle-color mat-icon,
   .vehicle-efficiency mat-icon {
-    margin-right: 6px;
-    font-size: 20px;
-    width: 20px;
-    height: 20px;
+    margin-right: 8px;
+    font-size: 22px;
+    width: 22px;
+    height: 22px;
     color: #888;
+  }
+
+  /* Location Section - Positioned at bottom */
+  .vehicle-location-section {
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid #e0e0e0;
+  }
+
+  .vehicle-location {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+  }
+  
+  .vehicle-location mat-icon {
+    margin-right: 8px;
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+    color: #4CAF50;
   }
   
   /* Button at the bottom right */

@@ -1,4 +1,5 @@
 import { Car } from './car.model';
+import { Location } from './location.model';
 
 export interface VehicleListing {
   id: string;
@@ -7,6 +8,7 @@ export interface VehicleListing {
   mileage: number;
   color: string;
   listingLocationId: string;
+  listingLocation?: Location;
   price: number;
 }
 
